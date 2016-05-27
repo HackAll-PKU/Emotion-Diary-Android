@@ -38,8 +38,9 @@ public class FaceHelper {
 
     /**
      * 在Face++中新建Person，并将person_id存入sharedPreferences
+     * @return 是否创建成功
      */
-    public void createPerson() {
+    public boolean createPerson() {
         try {
             JSONObject result = httpHandler.personCreate(new PostParameters());
             SharedPreferences sharedPreferences = context.getSharedPreferences(context.getResources().getString(R.string.FaceHelperPreference), Context.MODE_PRIVATE);
@@ -47,8 +48,10 @@ public class FaceHelper {
             editor.putString(context.getResources().getString(R.string.FaceHelperPersonID), result.getString("person_id"));
             editor.commit();
             Log.v("SavePersonID", result.getString("person_id"));
+            return true;
         } catch (FaceppParseException | JSONException e) {
             e.printStackTrace();
+            return false;
         }
     }
 }
