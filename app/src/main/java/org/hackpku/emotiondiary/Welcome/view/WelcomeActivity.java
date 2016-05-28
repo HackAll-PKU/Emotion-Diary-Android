@@ -2,7 +2,6 @@ package org.hackpku.emotiondiary.Welcome.view;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -13,11 +12,13 @@ import android.widget.Toast;
 import org.hackpku.emotiondiary.R;
 import org.hackpku.emotiondiary.Welcome.presenter.IWelcomePresenter;
 import org.hackpku.emotiondiary.Welcome.presenter.WelcomePresenterImpl;
+import org.hackpku.emotiondiary.common.FaceHelper.FaceHelper;
 
 public class WelcomeActivity extends Activity implements View.OnClickListener, IWelcomeView {
     private Button btnLogIn;
     private Button btnRecordEmotion;
     private Button btnEnterHomepage;
+    FaceHelper faceHelper;
 
     IWelcomePresenter welcomePresenter; // 通过持有接口，而不是持有类，来提高代码的复用性
 
@@ -38,6 +39,9 @@ public class WelcomeActivity extends Activity implements View.OnClickListener, I
         btnRecordEmotion.setOnClickListener(this);
         btnEnterHomepage.setOnClickListener(this);
 
+        btnRecordEmotion.setEnabled(false);
+        btnEnterHomepage.setEnabled(false);
+
         welcomePresenter = new WelcomePresenterImpl(this);
     }
 
@@ -57,8 +61,11 @@ public class WelcomeActivity extends Activity implements View.OnClickListener, I
     }
 
     @Override
-    public void onLogInResult(boolean logInResult){
-        Toast.makeText(this, "LogIn Status: " + logInResult, Toast.LENGTH_SHORT).show();
+    public void onLogInResult(boolean logInResult, String msg){
+        btnRecordEmotion.setEnabled(logInResult);
+        btnEnterHomepage.setEnabled(logInResult);
+        btnLogIn.setEnabled(!logInResult);
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -66,10 +73,7 @@ public class WelcomeActivity extends Activity implements View.OnClickListener, I
         //*
         Toast.makeText(this, "Record emotion called", Toast.LENGTH_SHORT).show();
         /*/
-        Intent intent = new Intent();
-        intent.setClass(WelcomeActivity.this, RecordEmotion.class);
-        startActivity(intent);
-        //finish();
+        finish();
         //*/
     }
 
@@ -78,10 +82,14 @@ public class WelcomeActivity extends Activity implements View.OnClickListener, I
         //*
         Toast.makeText(this, "Enter homepage called", Toast.LENGTH_SHORT).show();
         /*/
-        Intent intent = new Intent();
-        intent.setClass(WelcomeActivity.this, Homepage.class);
-        startActivity(intent);
         finish();
         //*/
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        welcomePresenter.onActivityResult(requestCode, resultCode, data);
+    }
+
 }
