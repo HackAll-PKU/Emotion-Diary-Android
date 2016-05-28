@@ -14,11 +14,11 @@ import io.realm.RealmObject;
  */
 public class Diary extends RealmObject {
 
-    private Integer happiness;   // 高兴值
-    private String text;         // 日记内容
-    private DiaryPicture selfie;       // 自拍照片
-    private RealmList<DiaryPicture> pictures;   // 其他照片
-    private Date date;           // 日期
+    private Integer happiness;                   // 高兴值
+    private String text;                         // 日记内容
+    private DiaryPicture selfie;                 // 自拍照片
+    private RealmList<DiaryPicture> pictures;    // 其他照片
+    private Date date;                           // 日期
 
     public Diary() {}
 
