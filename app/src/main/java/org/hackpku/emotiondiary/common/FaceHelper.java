@@ -111,4 +111,26 @@ public class FaceHelper {
             return false;
         }
     }
+
+    /**
+     * 训练person的verify能力，当有人脸加入或者删去时需要调用此方法（train耗时较久，API只会返回一个session_id，因此本方法若返回true只能表示此网络请求发送成功，不代表train成功）
+     * @return  是否成功
+     * @throws NullPointerException 如果没有在存储中发现personID则会throw，请在createPerson之后调用此方法
+     */
+    public boolean train() throws NullPointerException {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getResources().getString(R.string.FaceHelperPreference), Context.MODE_PRIVATE);
+        String personID = sharedPreferences.getString(context.getResources().getString(R.string.FaceHelperPersonID), "this is wrong");
+        if (personID.equals("this is wrong")) {
+            throw new NullPointerException("can not find personID in storage! please make sure you've created person");
+        }
+        try {
+            JSONObject result = httpHandler.trainVerify(new PostParameters().setPersonId(personID));
+            String sessionID = result.getString("session_id");
+            Log.v(TAG, "sessionID: " + sessionID);
+            return true;
+        } catch (FaceppParseException | JSONException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

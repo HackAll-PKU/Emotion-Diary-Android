@@ -61,4 +61,10 @@ public class FaceHelperTest {
         assertTrue(result);
     }
 
+    @Test
+    public void testTrain() {
+        boolean result = faceHelper.train();
+        assertTrue(result);
+    }
+
 }
