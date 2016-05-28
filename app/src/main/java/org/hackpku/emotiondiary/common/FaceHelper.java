@@ -127,6 +127,27 @@ public class FaceHelper {
     }
 
     /**
+     * 验证某个faceID是否属于personID
+     * @param faceID
+     * @return 是否属于
+     * @throws requestError 网络请求或解析错误时会抛出此Exception
+     * @throws personIDNotFound 在storage中没有找到personID信息时会抛出此异常，请在create person后调用此接口
+     */
+    public boolean verify(String faceID) throws requestError, personIDNotFound {
+        String personID = getPersonIDFromStorage();
+        try {
+            JSONObject result = httpHandler.recognitionVerify(new PostParameters().setPersonId(personID).setFaceId(faceID));
+            boolean isSamePerson = result.getBoolean("is_same_person");
+            Log.v(TAG, isSamePerson ? "isSamePerson" : "isNotSamePerson");
+            return isSamePerson;
+        }
+        catch (FaceppParseException | JSONException e) {
+            e.printStackTrace();
+            throw new requestError("verify request error");
+        }
+    }
+
+    /**
      * 从storage中获取personID
      * @return personID
      * @throws personIDNotFound 存储中没有personID，一般是没有调用createPerson造成的

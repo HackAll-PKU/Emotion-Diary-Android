@@ -93,4 +93,33 @@ public class FaceHelperTest {
         }
     }
 
+    @Test
+    public void testVerify() {
+        try {
+            Bitmap img1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.test2);
+            assertTrue(img1 != null);
+            String faceID1 = faceHelper.uploadPhoto(img1);
+            assertTrue(faceID1 != null);
+            boolean addFaceResult1 = faceHelper.addFace(faceID1);
+            assertTrue(addFaceResult1);
+
+            faceHelper.train();
+            Thread.sleep(5000);
+
+            Bitmap img2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.test2);
+            assertTrue(img2 != null);
+            String faceID2 = faceHelper.uploadPhoto(img2);
+            boolean result = faceHelper.verify(faceID2);
+            assertTrue(result);
+        } catch (FaceHelper.requestError requestError) {
+            requestError.printStackTrace();
+            assertTrue("requestError!", false);
+        } catch (FaceHelper.personIDNotFound personIDNotFound) {
+            personIDNotFound.printStackTrace();
+            assertTrue("personIDNotFound!", false);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
