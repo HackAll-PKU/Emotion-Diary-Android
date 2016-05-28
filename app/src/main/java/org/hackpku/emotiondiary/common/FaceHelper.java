@@ -2,6 +2,8 @@ package org.hackpku.emotiondiary.common;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.util.Log;
 
 import com.facepp.error.FaceppParseException;
@@ -11,6 +13,8 @@ import com.facepp.http.PostParameters;
 import org.hackpku.emotiondiary.R;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
 
 /**
  * Created by ChenLetian on 16/5/27.
@@ -52,6 +56,30 @@ public class FaceHelper {
         } catch (FaceppParseException | JSONException e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+    /**
+     * 上传照片
+     * @param img 照片(Bitmap)
+     * @return 这张照片中face的face_id，如果失败则为null
+     */
+    public String uploadPhoto(final Bitmap img) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        float scale = Math.min(1, Math.min(600f / img.getWidth(), 600f / img.getHeight()));
+        Matrix matrix = new Matrix();
+        matrix.postScale(scale, scale);
+
+        Bitmap imgSmall = Bitmap.createBitmap(img, 0, 0, img.getWidth(), img.getHeight(), matrix, false);
+
+        imgSmall.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        byte[] data = stream.toByteArray();
+        try {
+            JSONObject result = httpHandler.detectionDetect(new PostParameters().setImg(data).setMode("oneface"));
+            return result.getJSONArray("face").getJSONObject(0).getString("face_id");
+        } catch (FaceppParseException | JSONException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }

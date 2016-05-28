@@ -3,12 +3,15 @@ package org.hackpku.emotiondiary.api;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
+import android.util.Log;
 
-import org.hackpku.emotiondiary.common.FaceHelper;
 import org.hackpku.emotiondiary.R;
+import org.hackpku.emotiondiary.common.FaceHelper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,6 +42,15 @@ public class FaceHelperTest {
         SharedPreferences sharedPreferences = context.getSharedPreferences(resources.getString(R.string.FaceHelperPreference), Context.MODE_PRIVATE);
         String faceHelperPeopleID = sharedPreferences.getString(resources.getString(R.string.FaceHelperPersonID), "this is wrong");
         assertTrue(!faceHelperPeopleID.equals("this is wrong"));
+    }
+
+    @Test
+    public void testUploadImg() {
+        Bitmap img = BitmapFactory.decodeResource(context.getResources(), R.drawable.test1);
+        assertTrue(img != null);
+        String faceID = faceHelper.uploadPhoto(img);
+        Log.v("faceID", faceID);
+        assertTrue(faceID != null);
     }
 
 }
