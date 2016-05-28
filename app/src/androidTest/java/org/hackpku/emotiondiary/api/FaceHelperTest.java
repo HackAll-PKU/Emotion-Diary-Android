@@ -15,6 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -119,6 +120,22 @@ public class FaceHelperTest {
             assertTrue("personIDNotFound!", false);
         } catch (InterruptedException e) {
             e.printStackTrace();
+            assertTrue("InterruptedException!", false);
+        }
+    }
+
+    @Test
+    public void testGetSmiling() {
+        try {
+            Bitmap img = BitmapFactory.decodeResource(context.getResources(), R.drawable.test2);
+            assertTrue(img != null);
+            String faceID = faceHelper.uploadPhoto(img);
+            assertTrue(faceID != null);
+            double smiling = faceHelper.getSmiling(faceID);
+            assertEquals(smiling, 95.9057, 1);
+        } catch (FaceHelper.requestError requestError) {
+            requestError.printStackTrace();
+            assertTrue("requestError!", false);
         }
     }
 
