@@ -39,7 +39,7 @@ public class FaceHelper {
 
     private Context context;
     private HttpRequests httpHandler;
-    private String TAG = "emotionDiary.test";
+    private String TAG = "EmotionDiary.FaceHelper";
 
     /**
      * 在Face++中新建Person，并将person_id存入sharedPreferences
@@ -144,6 +144,18 @@ public class FaceHelper {
         catch (FaceppParseException | JSONException e) {
             e.printStackTrace();
             throw new requestError("verify request error");
+        }
+    }
+
+    public double getSmiling(String faceID) throws requestError {
+        try {
+            JSONObject result = httpHandler.infoGetFace(new PostParameters().setFaceId(faceID));
+            double smiling = result.getJSONArray("face_info").getJSONObject(0).getJSONObject("attribute").getJSONObject("smiling").getDouble("value");
+            Log.v(TAG, "smiling: " + String.valueOf(smiling));
+            return smiling;
+        } catch (FaceppParseException | JSONException e) {
+            e.printStackTrace();
+            throw new requestError("getInfo request error");
         }
     }
 
