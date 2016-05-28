@@ -147,6 +147,18 @@ public class FaceHelper {
         }
     }
 
+    public double getSmiling(String faceID) throws requestError {
+        try {
+            JSONObject result = httpHandler.infoGetFace(new PostParameters().setFaceId(faceID));
+            double smiling = result.getJSONArray("face_info").getJSONObject(0).getJSONObject("attribute").getJSONObject("smiling").getDouble("value");
+            Log.v(TAG, "smiling: " + String.valueOf(smiling));
+            return smiling;
+        } catch (FaceppParseException | JSONException e) {
+            e.printStackTrace();
+            throw new requestError("getInfo request error");
+        }
+    }
+
     /**
      * 从storage中获取personID
      * @return personID
