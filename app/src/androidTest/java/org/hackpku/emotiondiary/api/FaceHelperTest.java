@@ -19,6 +19,7 @@ import static org.junit.Assert.assertTrue;
 
 /**
  * Created by ChenLetian on 16/5/27.
+ * FaceHelper的测试文件
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
@@ -37,34 +38,59 @@ public class FaceHelperTest {
 
     @Test
     public void testCreatePeople() {
-        faceHelper.createPerson();
-        SharedPreferences sharedPreferences = context.getSharedPreferences(resources.getString(R.string.FaceHelperPreference), Context.MODE_PRIVATE);
-        String faceHelperPeopleID = sharedPreferences.getString(resources.getString(R.string.FaceHelperPersonID), "this is wrong");
-        assertTrue(!faceHelperPeopleID.equals("this is wrong"));
+        try {
+            faceHelper.createPerson();
+            SharedPreferences sharedPreferences = context.getSharedPreferences(resources.getString(R.string.FaceHelperPreference), Context.MODE_PRIVATE);
+            String faceHelperPeopleID = sharedPreferences.getString(resources.getString(R.string.FaceHelperPersonID), "this is wrong");
+            assertTrue(!faceHelperPeopleID.equals("this is wrong"));
+        } catch (FaceHelper.requestError requestError) {
+            requestError.printStackTrace();
+            assertTrue("requestError!", false);
+        }
     }
 
     @Test
     public void testUploadImg() {
         Bitmap img = BitmapFactory.decodeResource(context.getResources(), R.drawable.test1);
         assertTrue(img != null);
-        String faceID = faceHelper.uploadPhoto(img);
-        assertTrue(faceID != null);
+        try {
+            String faceID = faceHelper.uploadPhoto(img);
+            assertTrue(faceID != null);
+        } catch (FaceHelper.requestError requestError) {
+            requestError.printStackTrace();
+            assertTrue("requestError!", false);
+        }
     }
 
     @Test
     public void testAddFace() {
         Bitmap img = BitmapFactory.decodeResource(context.getResources(), R.drawable.test1);
         assertTrue(img != null);
-        String faceID = faceHelper.uploadPhoto(img);
-        assertTrue(faceID != null);
-        boolean result = faceHelper.addFace(faceID);
-        assertTrue(result);
+        try {
+            String faceID = faceHelper.uploadPhoto(img);
+            assertTrue(faceID != null);
+            boolean result = faceHelper.addFace(faceID);
+            assertTrue(result);
+        } catch (FaceHelper.requestError requestError) {
+            requestError.printStackTrace();
+            assertTrue("requestError!", false);
+        } catch (FaceHelper.personIDNotFound personIDNotFound) {
+            personIDNotFound.printStackTrace();
+            assertTrue("personIDNotFound!", false);
+        }
     }
 
     @Test
     public void testTrain() {
-        boolean result = faceHelper.train();
-        assertTrue(result);
+        try {
+            faceHelper.train();
+        } catch (FaceHelper.requestError requestError) {
+            requestError.printStackTrace();
+            assertTrue("requestError!", false);
+        } catch (FaceHelper.personIDNotFound personIDNotFound) {
+            personIDNotFound.printStackTrace();
+            assertTrue("personIDNotFound!", false);
+        }
     }
 
 }

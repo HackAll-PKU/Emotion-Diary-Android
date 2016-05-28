@@ -43,9 +43,9 @@ public class FaceHelper {
 
     /**
      * 在Face++中新建Person，并将person_id存入sharedPreferences
-     * @return 是否创建成功
+     * @throws requestError 网络请求或解析错误时会抛出此Exception
      */
-    public boolean createPerson() {
+    public void createPerson() throws requestError {
         try {
             JSONObject result = httpHandler.personCreate(new PostParameters());
             SharedPreferences sharedPreferences = context.getSharedPreferences(context.getResources().getString(R.string.FaceHelperPreference), Context.MODE_PRIVATE);
@@ -53,20 +53,20 @@ public class FaceHelper {
             editor.putString(context.getResources().getString(R.string.FaceHelperPersonID), result.getString("person_id"));
             editor.commit();
             Log.v(TAG, "personID: " + result.getString("person_id"));
-            return true;
         } catch (FaceppParseException | JSONException e) {
             e.printStackTrace();
             Log.v(TAG, "createPerson failed");
-            return false;
+            throw new requestError("create person request error");
         }
     }
 
     /**
      * 上传照片
      * @param img 照片(Bitmap)
-     * @return 这张照片中face的face_id，如果失败则为null
+     * @return 这张照片中face的face_id
+     * @throws requestError 网络请求或解析错误时会抛出此Exception
      */
-    public String uploadPhoto(final Bitmap img) {
+    public String uploadPhoto(final Bitmap img) throws requestError {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         float scale = Math.min(1, Math.min(600f / img.getWidth(), 600f / img.getHeight()));
         Matrix matrix = new Matrix();
@@ -84,23 +84,20 @@ public class FaceHelper {
         } catch (FaceppParseException | JSONException e) {
             e.printStackTrace();
             Log.v(TAG, "uploadPhoto failed");
-            return null;
+            throw new requestError("upload photo request error");
         }
     }
 
     /**
      * 添加Face到person
      * @param faceID    face的faceID
-     * @return  是否成功
-     * @throws NullPointerException 如果没有在存储中发现personID则会throw，请在createPerson之后调用此方法
+     * @return  api返回是否添加成功
+     * @throws requestError 网络请求或解析错误时会抛出此Exception
+     * @throws personIDNotFound 在storage中没有找到personID信息时会抛出此异常，请在create person后调用此接口
      */
-    public boolean addFace(String faceID) throws NullPointerException {
+    public boolean addFace(String faceID) throws requestError, personIDNotFound {
+        String personID = getPersonIDFromStorage();
         try {
-            SharedPreferences sharedPreferences = context.getSharedPreferences(context.getResources().getString(R.string.FaceHelperPreference), Context.MODE_PRIVATE);
-            String personID = sharedPreferences.getString(context.getResources().getString(R.string.FaceHelperPersonID), "this is wrong");
-            if (personID.equals("this is wrong")) {
-                throw new NullPointerException("can not find personID in storage! please make sure you've created person");
-            }
             JSONObject result = httpHandler.personAddFace(new PostParameters().setFaceId(faceID).setPersonId(personID));
             boolean success = result.getBoolean("success");
             Log.v(TAG, "addFace" + (success ? "OK" : "failed"));
@@ -108,29 +105,57 @@ public class FaceHelper {
         } catch (FaceppParseException | JSONException e) {
             e.printStackTrace();
             Log.v(TAG, "addFace failed");
-            return false;
+            throw new requestError("add face request error");
         }
     }
 
     /**
      * 训练person的verify能力，当有人脸加入或者删去时需要调用此方法（train耗时较久，API只会返回一个session_id，因此本方法若返回true只能表示此网络请求发送成功，不代表train成功）
-     * @return  是否成功
-     * @throws NullPointerException 如果没有在存储中发现personID则会throw，请在createPerson之后调用此方法
+     * @throws requestError 网络请求或解析错误时会抛出此Exception
+     * @throws personIDNotFound 在storage中没有找到personID信息时会抛出此异常，请在create person后调用此接口
      */
-    public boolean train() throws NullPointerException {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getResources().getString(R.string.FaceHelperPreference), Context.MODE_PRIVATE);
-        String personID = sharedPreferences.getString(context.getResources().getString(R.string.FaceHelperPersonID), "this is wrong");
-        if (personID.equals("this is wrong")) {
-            throw new NullPointerException("can not find personID in storage! please make sure you've created person");
-        }
+    public void train() throws requestError, personIDNotFound {
+        String personID = getPersonIDFromStorage();
         try {
             JSONObject result = httpHandler.trainVerify(new PostParameters().setPersonId(personID));
             String sessionID = result.getString("session_id");
             Log.v(TAG, "sessionID: " + sessionID);
-            return true;
         } catch (FaceppParseException | JSONException e) {
             e.printStackTrace();
-            return false;
+            throw new requestError("train request error");
         }
     }
+
+    /**
+     * 从storage中获取personID
+     * @return personID
+     * @throws personIDNotFound 存储中没有personID，一般是没有调用createPerson造成的
+     */
+    private String getPersonIDFromStorage() throws personIDNotFound{
+        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getResources().getString(R.string.FaceHelperPreference), Context.MODE_PRIVATE);
+        String personID = sharedPreferences.getString(context.getResources().getString(R.string.FaceHelperPersonID), "this is wrong");
+        if (personID.equals("this is wrong")) {
+            throw new personIDNotFound("can not find personID in storage! please make sure you've created person");
+        }
+        return personID;
+    }
+
+    /**
+     * 网络请求或JSON解析错误
+     */
+    public class requestError extends Exception {
+        public requestError(String detailMessage) {
+            super(detailMessage);
+        }
+    }
+
+    /**
+     * storage中没有personID
+     */
+    public class personIDNotFound extends Exception {
+        public personIDNotFound(String detailMessage) {
+            super(detailMessage);
+        }
+    }
+
 }
