@@ -39,6 +39,7 @@ public class FaceHelper {
 
     private Context context;
     private HttpRequests httpHandler;
+    private String TAG = "emotionDiary.test";
 
     /**
      * 在Face++中新建Person，并将person_id存入sharedPreferences
@@ -51,10 +52,11 @@ public class FaceHelper {
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString(context.getResources().getString(R.string.FaceHelperPersonID), result.getString("person_id"));
             editor.commit();
-            Log.v("SavePersonID", result.getString("person_id"));
+            Log.v(TAG, "personID: " + result.getString("person_id"));
             return true;
         } catch (FaceppParseException | JSONException e) {
             e.printStackTrace();
+            Log.v(TAG, "createPerson failed");
             return false;
         }
     }
@@ -76,10 +78,37 @@ public class FaceHelper {
         byte[] data = stream.toByteArray();
         try {
             JSONObject result = httpHandler.detectionDetect(new PostParameters().setImg(data).setMode("oneface"));
-            return result.getJSONArray("face").getJSONObject(0).getString("face_id");
+            String faceID = result.getJSONArray("face").getJSONObject(0).getString("face_id");
+            Log.v(TAG, "faceID: " + faceID);
+            return faceID;
         } catch (FaceppParseException | JSONException e) {
             e.printStackTrace();
+            Log.v(TAG, "uploadPhoto failed");
             return null;
+        }
+    }
+
+    /**
+     * 添加Face到person
+     * @param faceID    face的faceID
+     * @return  是否成功
+     * @throws NullPointerException 如果没有在存储中发现personID则会throw，请在createPerson之后调用此方法
+     */
+    public boolean addFace(String faceID) throws NullPointerException {
+        try {
+            SharedPreferences sharedPreferences = context.getSharedPreferences(context.getResources().getString(R.string.FaceHelperPreference), Context.MODE_PRIVATE);
+            String personID = sharedPreferences.getString(context.getResources().getString(R.string.FaceHelperPersonID), "this is wrong");
+            if (personID.equals("this is wrong")) {
+                throw new NullPointerException("can not find personID in storage! please make sure you've created person");
+            }
+            JSONObject result = httpHandler.personAddFace(new PostParameters().setFaceId(faceID).setPersonId(personID));
+            boolean success = result.getBoolean("success");
+            Log.v(TAG, "addFace" + (success ? "OK" : "failed"));
+            return success;
+        } catch (FaceppParseException | JSONException e) {
+            e.printStackTrace();
+            Log.v(TAG, "addFace failed");
+            return false;
         }
     }
 }

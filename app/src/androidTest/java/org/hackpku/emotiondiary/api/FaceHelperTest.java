@@ -8,7 +8,6 @@ import android.graphics.BitmapFactory;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
-import android.util.Log;
 
 import org.hackpku.emotiondiary.R;
 import org.hackpku.emotiondiary.common.FaceHelper;
@@ -49,8 +48,17 @@ public class FaceHelperTest {
         Bitmap img = BitmapFactory.decodeResource(context.getResources(), R.drawable.test1);
         assertTrue(img != null);
         String faceID = faceHelper.uploadPhoto(img);
-        Log.v("faceID", faceID);
         assertTrue(faceID != null);
+    }
+
+    @Test
+    public void testAddFace() {
+        Bitmap img = BitmapFactory.decodeResource(context.getResources(), R.drawable.test1);
+        assertTrue(img != null);
+        String faceID = faceHelper.uploadPhoto(img);
+        assertTrue(faceID != null);
+        boolean result = faceHelper.addFace(faceID);
+        assertTrue(result);
     }
 
 }
