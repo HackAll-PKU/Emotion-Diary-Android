@@ -85,6 +85,11 @@ public class WelcomeActivity extends Activity implements View.OnClickListener, I
     }
 
     @Override
+    public void makeToast(String str) {
+        Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         welcomePresenter.onActivityResult(requestCode, resultCode, data);

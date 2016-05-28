@@ -2,6 +2,8 @@ package org.hackpku.emotiondiary.Welcome.presenter;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,9 +13,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
-import android.text.format.DateFormat;
-import android.util.Log;
-import android.widget.Toast;
 
 import org.hackpku.emotiondiary.R;
 import org.hackpku.emotiondiary.Welcome.view.IWelcomeView;
@@ -21,7 +20,8 @@ import org.hackpku.emotiondiary.common.FaceHelper.FaceHelper;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Calendar;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 /**
@@ -32,7 +32,6 @@ public class WelcomePresenterImpl implements IWelcomePresenter {
     IWelcomeView welcomeView;  // presenter通过view来操作activity的表现
     Activity welcomeActivity;
     FaceHelper faceHelper;
-    private static final int REQUEST_CODE_CAMERA = 1;
     boolean initFlag = false;
 
     public WelcomePresenterImpl(IWelcomeView welcomeView) {
@@ -41,55 +40,76 @@ public class WelcomePresenterImpl implements IWelcomePresenter {
         this.faceHelper = FaceHelper.getInstance(this.welcomeActivity);
     }
 
-    @Override
-    public void doLogIn() {
-        // 此处实现登录逻辑
+    private void checkPerson() {
         SharedPreferences sharedPreferences = welcomeActivity.getSharedPreferences(welcomeActivity.getResources().getString(R.string.FaceHelperPreference), Context.MODE_PRIVATE);
         String faceHelperPeopleID = sharedPreferences.getString(welcomeActivity.getResources().getString(R.string.FaceHelperPersonID), "this is wrong");
 
-        Log.i("faceHelperPeopleID", faceHelperPeopleID);
-
         if (faceHelperPeopleID.equals("this is wrong")) {
-            initFlag = true;
+            // 显示提示框
+            final ProgressDialog dialog = new ProgressDialog(welcomeActivity);
+            dialog.setTitle("欢迎使用");
+            dialog.setMessage("这是您的第一次使用，正在为您创建用户，请稍候...");
+            dialog.show();
+
             new Thread() {
                 @Override
                 public void run() {
                     try {
                         faceHelper.createPerson();
+                        makeToast("用户创建成功");
+                        initFlag = true;
                     } catch (FaceHelper.requestError requestError) {
                         requestError.printStackTrace();
+                        makeToast("用户创建失败");
+                    } finally {
+                        Message msg = new Message();
+                        msg.what = ID_DIALOG_CANCEL;
+                        msg.obj = dialog;
+                        mHandler.sendMessage(msg);
                     }
                 }
             }.start();
         }
+    }
+
+    @Override
+    public void doLogIn() {
+        // 判断是否有用户
+        checkPerson();
 
         // 检测sd是否可用
         if (!Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)) {
-            Toast.makeText(welcomeActivity, "外部存储不可用", Toast.LENGTH_LONG).show();
+            welcomeView.makeToast("外部存储不可用");
             return;
         }
 
-        //指定一个图片路径对应的file对象
-        String name = DateFormat.format("yyyyMMdd_hhmmss", Calendar.getInstance(Locale.CHINA)) + ".jpg";
-        name = "temp.jpg";
-        File dir = new File(Environment.getExternalStorageDirectory().getPath() + "/EmotionDiary/Image/");
-        if (!dir.exists()) dir.mkdirs();
-        File file = new File(dir, name);
-        if (file.exists()) file.delete();
-        Uri uri = Uri.fromFile(file);
-
-        //实例化一个intent，并指定action
+        // 实例化一个intent，并指定action
         Intent intent = new Intent();
         intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
-        //intent.putExtra(MediaStore.Images.Media.ORIENTATION, 0);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+        intent.putExtra(MediaStore.Images.Media.ORIENTATION, 0);
 
-        //启动activity
-        welcomeActivity.startActivityForResult(intent, REQUEST_CODE_CAMERA);
+        // 指定图片路径对应的file对象
+        File photoFile = null;
+        try {
+            photoFile = createImageFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // 启动activity
+        if (photoFile != null) {
+            intent.putExtra(MediaStore.EXTRA_OUTPUT,
+                    Uri.fromFile(photoFile));
+            if (intent.resolveActivity(welcomeActivity.getPackageManager()) != null) {
+                welcomeActivity.startActivityForResult(intent, REQUEST_CODE_CAMERA);
+            }
+        }
     }
 
-    final static int ID_LOGIN_SUCCESS = 0;
-    final static int ID_LOGIN_FAILED = 1;
+    private static final int ID_LOGIN_SUCCESS = 0;
+    private static final int ID_LOGIN_FAILED = 1;
+    private static final int ID_DIALOG_CANCEL = 10086;
+    private static final int ID_MAKE_TOAST = 65535;
 
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
@@ -102,13 +122,50 @@ public class WelcomePresenterImpl implements IWelcomePresenter {
                 case ID_LOGIN_FAILED:
                     welcomeView.onLogInResult(false, (String) msg.obj);
                     break;
+                case ID_DIALOG_CANCEL:
+                    ((Dialog) msg.obj).cancel();
+                    break;
+                case ID_MAKE_TOAST:
+                    welcomeView.makeToast((String) msg.obj);
+                    break;
             }
         }
     };
 
+    private void makeToast(String str) {
+        Message msg = new Message();
+        msg.what = ID_MAKE_TOAST;
+        msg.obj = str;
+        mHandler.sendMessage(msg);
+    }
+
+    private String mCurrentPhotoPath;
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String imageFileName = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.CHINA).format(new Date());
+        File storageDir = welcomeActivity.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+
     private void afterCamera() {
-        File file = new File(Environment.getExternalStorageDirectory() + "/EmotionDiary/Image/" + "temp.jpg");
-        Uri uri = Uri.fromFile(file);
+        // 显示提示框
+        final ProgressDialog dialog = new ProgressDialog(welcomeActivity);
+        dialog.setTitle("确保这是你");
+        dialog.setMessage("正在识别照片中的面孔，请稍候...");
+        dialog.show();
+
+        final File file = new File(mCurrentPhotoPath);
+        final Uri uri = Uri.fromFile(file);
         try {
             final Bitmap bitmap = MediaStore.Images.Media.getBitmap(welcomeActivity.getContentResolver(), uri);
             new Thread() {
@@ -123,11 +180,12 @@ public class WelcomePresenterImpl implements IWelcomePresenter {
                                 msg.what = ID_LOGIN_FAILED;
                                 msg.obj = "这好像不是你哦，请不要调戏我T_T";
                                 mHandler.sendMessage(msg);
+                                if (file.exists()) file.delete();
                                 return;
                             }
                         }
                         mHandler.sendEmptyMessage(ID_LOGIN_SUCCESS);
-                        boolean addResult = faceHelper.addFace(faceID);
+                        faceHelper.addFace(faceID);
                         faceHelper.train();
                     } catch (FaceHelper.requestError requestError) {
                         requestError.printStackTrace();
@@ -135,11 +193,18 @@ public class WelcomePresenterImpl implements IWelcomePresenter {
                         msg.what = ID_LOGIN_FAILED;
                         msg.obj = "没有找到人脸哦，请换个姿势吧T_T";
                         mHandler.sendMessage(msg);
+                        if (file.exists()) file.delete();
                     } catch (FaceHelper.personIDNotFound personIDNotFound) {
                         personIDNotFound.printStackTrace();
                         Message msg = new Message();
                         msg.what = ID_LOGIN_FAILED;
                         msg.obj = personIDNotFound.getMessage();
+                        mHandler.sendMessage(msg);
+                        if (file.exists()) file.delete();
+                    } finally {
+                        Message msg = new Message();
+                        msg.what = ID_DIALOG_CANCEL;
+                        msg.obj = dialog;
                         mHandler.sendMessage(msg);
                     }
                 }
@@ -152,6 +217,7 @@ public class WelcomePresenterImpl implements IWelcomePresenter {
 
     @Override
     public void recordEmotion() {
+        //TODO:实现RecordEmotion后取消注释
         //Intent intent = new Intent();
         //intent.setClass(welcomeActivity, RecordEmotion.class);
         //welcomeActivity.startActivity(intent);
@@ -160,11 +226,14 @@ public class WelcomePresenterImpl implements IWelcomePresenter {
 
     @Override
     public void enterHomepage() {
+        //TODO:实现Homepage后取消注释
         //Intent intent = new Intent();
         //intent.setClass(welcomeActivity, Homepage.class);
         //welcomeActivity.startActivity(intent);
         welcomeView.onEnterHomepage();
     }
+
+    private static final int REQUEST_CODE_CAMERA = 1;
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

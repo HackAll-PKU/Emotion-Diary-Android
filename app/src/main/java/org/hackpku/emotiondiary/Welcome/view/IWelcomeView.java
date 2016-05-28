@@ -8,4 +8,5 @@ public interface IWelcomeView {
     void onLogInResult(boolean logInResult, String msg);
     void onRecordEmotion();
     void onEnterHomepage();
+    void makeToast(String str);
 }
