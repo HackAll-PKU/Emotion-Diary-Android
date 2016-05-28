@@ -76,7 +76,7 @@ public class DiaryHelper {
         Date thisDate = thisDay.getTime();
         thisDay.add(Calendar.DAY_OF_MONTH, 1);
         Date nextDate = thisDay.getTime();
-        RealmResults<Diary> diaries = realm.where(Diary.class).between("date", thisDate, nextDate).findAll();
+        RealmResults<Diary> diaries = realm.where(Diary.class).between("date", thisDate, nextDate).findAllSorted("date", Sort.DESCENDING);
         Log.v(TAG, "getDiariesOfDay: " + diaries);
         return diaries;
     }
@@ -91,7 +91,7 @@ public class DiaryHelper {
         Date thisDate = thisDay.getTime();
         thisDay.add(Calendar.DAY_OF_MONTH, 1);
         Date nextDate = date.getTime();
-        RealmResults<Diary> diaries = realm.where(Diary.class).between("date", thisDate, nextDate).findAll();
+        RealmResults<Diary> diaries = realm.where(Diary.class).between("date", thisDate, nextDate).findAllSorted("date", Sort.DESCENDING);
         Log.v(TAG, "getDiariesOfDay: " + diaries);
         return diaries;
     }
