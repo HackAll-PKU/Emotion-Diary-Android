@@ -1,4 +1,4 @@
-package org.hackpku.emotiondiary.common;
+package org.hackpku.emotiondiary.common.FaceHelper;
 
 import android.content.Context;
 import android.content.SharedPreferences;
