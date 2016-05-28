@@ -54,6 +54,8 @@ public class DiaryDataTest {
         Assert.assertArrayEquals(toSaveDiary.getPictures().first().getData(), gettedDiary.getPictures().first().getData());
         Assert.assertArrayEquals(toSaveDiary.getSelfie().getData(), gettedDiary.getSelfie().getData());
         Assert.assertEquals(toSaveDiary.getText(), gettedDiary.getText());
+        Bitmap gettedImage = gettedDiary.getSelfie().getImage();
+        Assert.assertNotNull(gettedImage);
     }
 
     @Test

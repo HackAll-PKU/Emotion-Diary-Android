@@ -1,6 +1,7 @@
 package org.hackpku.emotiondiary.common.Diary;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import java.io.ByteArrayOutputStream;
 
@@ -28,5 +29,13 @@ public class DiaryPicture extends RealmObject {
 
     public void setData(byte[] data) {
         this.data = data;
+    }
+
+    /**
+     * 从data获取图像
+     * @return 位图
+     */
+    public Bitmap getImage() {
+        return BitmapFactory.decodeByteArray(data, 0 ,data.length);
     }
 }
