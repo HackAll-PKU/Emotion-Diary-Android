@@ -12,13 +12,11 @@ import android.widget.Toast;
 import org.hackpku.emotiondiary.R;
 import org.hackpku.emotiondiary.Welcome.presenter.IWelcomePresenter;
 import org.hackpku.emotiondiary.Welcome.presenter.WelcomePresenterImpl;
-import org.hackpku.emotiondiary.common.FaceHelper.FaceHelper;
 
 public class WelcomeActivity extends Activity implements View.OnClickListener, IWelcomeView {
     private Button btnLogIn;
     private Button btnRecordEmotion;
     private Button btnEnterHomepage;
-    FaceHelper faceHelper;
 
     IWelcomePresenter welcomePresenter; // 通过持有接口，而不是持有类，来提高代码的复用性
 
@@ -46,8 +44,8 @@ public class WelcomeActivity extends Activity implements View.OnClickListener, I
     }
 
     @Override
-    public void onClick(View v){
-        switch (v.getId()){
+    public void onClick(View v) {
+        switch (v.getId()) {
             case R.id.btnLogIn:
                 welcomePresenter.doLogIn();
                 break;
@@ -61,7 +59,7 @@ public class WelcomeActivity extends Activity implements View.OnClickListener, I
     }
 
     @Override
-    public void onLogInResult(boolean logInResult, String msg){
+    public void onLogInResult(boolean logInResult, String msg) {
         btnRecordEmotion.setEnabled(logInResult);
         btnEnterHomepage.setEnabled(logInResult);
         btnLogIn.setEnabled(!logInResult);
@@ -69,7 +67,7 @@ public class WelcomeActivity extends Activity implements View.OnClickListener, I
     }
 
     @Override
-    public void onRecordEmotion(){
+    public void onRecordEmotion() {
         //*
         Toast.makeText(this, "Record emotion called", Toast.LENGTH_SHORT).show();
         /*/
@@ -78,7 +76,7 @@ public class WelcomeActivity extends Activity implements View.OnClickListener, I
     }
 
     @Override
-    public void onEnterHomepage(){
+    public void onEnterHomepage() {
         //*
         Toast.makeText(this, "Enter homepage called", Toast.LENGTH_SHORT).show();
         /*/

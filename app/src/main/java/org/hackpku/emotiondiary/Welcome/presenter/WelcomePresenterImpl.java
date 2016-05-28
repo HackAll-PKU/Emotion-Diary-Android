@@ -1,5 +1,6 @@
 package org.hackpku.emotiondiary.Welcome.presenter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -27,30 +28,30 @@ import java.util.Locale;
  * Created by Archimekai on 5/24/2016.
  * Presenter是MVP模式的核心
  */
-public class WelcomePresenterImpl implements IWelcomePresenter{
+public class WelcomePresenterImpl implements IWelcomePresenter {
     IWelcomeView welcomeView;  // presenter通过view来操作activity的表现
     Activity welcomeActivity;
     FaceHelper faceHelper;
     private static final int REQUEST_CODE_CAMERA = 1;
     boolean initFlag = false;
 
-    public WelcomePresenterImpl(IWelcomeView welcomeView){
+    public WelcomePresenterImpl(IWelcomeView welcomeView) {
         this.welcomeView = welcomeView;
         this.welcomeActivity = (Activity) welcomeView;
         this.faceHelper = FaceHelper.getInstance(this.welcomeActivity);
     }
 
     @Override
-    public void doLogIn(){
-        // 此处实现登陆逻辑
+    public void doLogIn() {
+        // 此处实现登录逻辑
         SharedPreferences sharedPreferences = welcomeActivity.getSharedPreferences(welcomeActivity.getResources().getString(R.string.FaceHelperPreference), Context.MODE_PRIVATE);
         String faceHelperPeopleID = sharedPreferences.getString(welcomeActivity.getResources().getString(R.string.FaceHelperPersonID), "this is wrong");
 
         Log.i("faceHelperPeopleID", faceHelperPeopleID);
 
-        if (faceHelperPeopleID.equals("this is wrong")){
+        if (faceHelperPeopleID.equals("this is wrong")) {
             initFlag = true;
-            new Thread(){
+            new Thread() {
                 @Override
                 public void run() {
                     try {
@@ -63,7 +64,7 @@ public class WelcomePresenterImpl implements IWelcomePresenter{
         }
 
         // 检测sd是否可用
-        if(!Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
+        if (!Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)) {
             Toast.makeText(welcomeActivity, "外部存储不可用", Toast.LENGTH_LONG).show();
             return;
         }
@@ -72,8 +73,8 @@ public class WelcomePresenterImpl implements IWelcomePresenter{
         String name = DateFormat.format("yyyyMMdd_hhmmss", Calendar.getInstance(Locale.CHINA)) + ".jpg";
         name = "temp.jpg";
         File dir = new File(Environment.getExternalStorageDirectory().getPath() + "/EmotionDiary/Image/");
-        if(!dir.exists()) dir.mkdirs();
-        File file =new File(dir, name);
+        if (!dir.exists()) dir.mkdirs();
+        File file = new File(dir, name);
         if (file.exists()) file.delete();
         Uri uri = Uri.fromFile(file);
 
@@ -90,7 +91,8 @@ public class WelcomePresenterImpl implements IWelcomePresenter{
     final static int ID_LOGIN_SUCCESS = 0;
     final static int ID_LOGIN_FAILED = 1;
 
-    private Handler mHandler = new Handler(){
+    @SuppressLint("HandlerLeak")
+    private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -104,12 +106,12 @@ public class WelcomePresenterImpl implements IWelcomePresenter{
         }
     };
 
-    private void afterCamera(){
+    private void afterCamera() {
         File file = new File(Environment.getExternalStorageDirectory() + "/EmotionDiary/Image/" + "temp.jpg");
         Uri uri = Uri.fromFile(file);
         try {
             final Bitmap bitmap = MediaStore.Images.Media.getBitmap(welcomeActivity.getContentResolver(), uri);
-            new Thread(){
+            new Thread() {
                 @Override
                 public void run() {
                     try {
@@ -126,9 +128,7 @@ public class WelcomePresenterImpl implements IWelcomePresenter{
                         }
                         mHandler.sendEmptyMessage(ID_LOGIN_SUCCESS);
                         boolean addResult = faceHelper.addFace(faceID);
-                        Log.i("addResult", addResult?"true":"false");
                         faceHelper.train();
-                        Log.i("train", "train");
                     } catch (FaceHelper.requestError requestError) {
                         requestError.printStackTrace();
                         Message msg = new Message();
@@ -168,7 +168,7 @@ public class WelcomePresenterImpl implements IWelcomePresenter{
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode){
+        switch (requestCode) {
             case REQUEST_CODE_CAMERA:
                 if (resultCode == Activity.RESULT_OK) {
                     afterCamera();
