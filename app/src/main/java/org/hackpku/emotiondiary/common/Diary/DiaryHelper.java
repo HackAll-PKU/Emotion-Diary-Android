@@ -72,12 +72,7 @@ public class DiaryHelper {
      * @return  那一天的日记
      */
     public RealmResults<Diary> getDiariesOfDay(Date date) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-        GregorianCalendar thisDay = new GregorianCalendar(year, month, day);
+        GregorianCalendar thisDay = transformDateToGregorianCalendar(date);
         Date thisDate = thisDay.getTime();
         thisDay.add(Calendar.DAY_OF_MONTH, 1);
         Date nextDate = thisDay.getTime();
@@ -92,16 +87,39 @@ public class DiaryHelper {
      * @return 那一天的日记
      */
     public RealmResults<Diary> getDiariesOfDay(GregorianCalendar date) {
-        int year = date.get(Calendar.YEAR);
-        int month = date.get(Calendar.MONTH);
-        int day = date.get(Calendar.DAY_OF_MONTH);
-        GregorianCalendar thisDay = new GregorianCalendar(year, month, day);
+        GregorianCalendar thisDay = transformDateToGregorianCalendar(date);
         Date thisDate = thisDay.getTime();
         thisDay.add(Calendar.DAY_OF_MONTH, 1);
         Date nextDate = date.getTime();
         RealmResults<Diary> diaries = realm.where(Diary.class).between("date", thisDate, nextDate).findAll();
         Log.v(TAG, "getDiariesOfDay: " + diaries);
         return diaries;
+    }
+
+    /**
+     * 将date中的年月日提取出来构造GregorianCalendar对象
+     * @param date Date对象
+     * @return 转换好的GregorianCalendar对象
+     */
+    private GregorianCalendar transformDateToGregorianCalendar(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        return new GregorianCalendar(year, month, day);
+    }
+
+    /**
+     * 将date中的年月日提取出来构造GregorianCalendar对象
+     * @param date GregorianCalendar对象
+     * @return 转换好的GregorianCalendar对象
+     */
+    private GregorianCalendar transformDateToGregorianCalendar(GregorianCalendar date) {
+        int year = date.get(Calendar.YEAR);
+        int month = date.get(Calendar.MONTH);
+        int day = date.get(Calendar.DAY_OF_MONTH);
+        return new GregorianCalendar(year, month, day);
     }
 
     @Override
