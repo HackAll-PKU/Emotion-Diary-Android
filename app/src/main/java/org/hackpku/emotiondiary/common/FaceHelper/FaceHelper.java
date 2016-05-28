@@ -39,7 +39,7 @@ public class FaceHelper {
 
     private Context context;
     private HttpRequests httpHandler;
-    private String TAG = "emotionDiary.test";
+    private String TAG = "EmotionDiary.FaceHelper";
 
     /**
      * 在Face++中新建Person，并将person_id存入sharedPreferences
