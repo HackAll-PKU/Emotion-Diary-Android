@@ -6,6 +6,7 @@ import android.util.Log;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.TreeMap;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -68,21 +69,6 @@ public class DiaryHelper {
 
     /**
      * 获取某一天的日记
-     * @param date  那一天的某个Date，只会考虑其中的年月日
-     * @return  那一天的日记
-     */
-    public RealmResults<Diary> getDiariesOfDay(Date date) {
-        GregorianCalendar thisDay = transformDateToGregorianCalendar(date);
-        Date thisDate = thisDay.getTime();
-        thisDay.add(Calendar.DAY_OF_MONTH, 1);
-        Date nextDate = thisDay.getTime();
-        RealmResults<Diary> diaries = realm.where(Diary.class).between("date", thisDate, nextDate).findAllSorted("date", Sort.DESCENDING);
-        Log.v(TAG, "getDiariesOfDay: " + diaries);
-        return diaries;
-    }
-
-    /**
-     * 获取某一天的日记
      * @param date 以那一天作为年月日的GregorianCalendar
      * @return 那一天的日记
      */
@@ -97,21 +83,44 @@ public class DiaryHelper {
     }
 
     /**
-     * 将date中的年月日提取出来构造GregorianCalendar对象
-     * @param date Date对象
-     * @return 转换好的GregorianCalendar对象
+     * 获取过去几天的快乐值
+     * @param days 过去几天（若为1即为只有今天）
+     * @return Date与Double组成的Map，表示某一天的快乐值为多少
      */
-    private GregorianCalendar transformDateToGregorianCalendar(Date date) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-        return new GregorianCalendar(year, month, day);
+    public TreeMap<Date, Double> getHappinessForTime(int days) {
+        GregorianCalendar thisDay = transformDateToGregorianCalendar(new GregorianCalendar());
+        thisDay.add(Calendar.DAY_OF_YEAR, 1);
+        Date destinationDate = thisDay.getTime();
+        thisDay.add(Calendar.DAY_OF_YEAR, -days);
+        Date nowQueryDate = thisDay.getTime();
+        RealmResults<Diary> diaries = realm.where(Diary.class).between("date", nowQueryDate, destinationDate).findAllSorted("date", Sort.ASCENDING);
+        TreeMap<Date, Double> result = new TreeMap<>();
+        int i = 0;
+        while (nowQueryDate.getTime() < destinationDate.getTime()) {
+            int happiness = 0;
+            int happinessCount = 0;
+            while (i < diaries.size()) {
+                Diary diary = diaries.get(i);
+                long timeDelta = diary.getDate().getTime() - nowQueryDate.getTime();
+                if ((timeDelta >= 0) && (timeDelta < 24*60*60*1000)) {
+                    happiness += diary.getHappiness();
+                    happinessCount++;
+                    i++;
+                }
+                else {
+                    break;
+                }
+            }
+            double averageHappiness = happinessCount == 0 ? 0 : happiness / happinessCount;
+            result.put(nowQueryDate, averageHappiness);
+            thisDay.add(Calendar.DAY_OF_YEAR, 1);
+            nowQueryDate = thisDay.getTime();
+        }
+        return result;
     }
 
     /**
-     * 将date中的年月日提取出来构造GregorianCalendar对象
+     * 将date中的年月日提取出来构造GregorianCalendar对象（舍弃时间信息，仅保留日期信息）
      * @param date GregorianCalendar对象
      * @return 转换好的GregorianCalendar对象
      */

@@ -16,9 +16,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.TreeMap;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -46,7 +46,7 @@ public class DiaryDataTest {
         Bitmap img = BitmapFactory.decodeResource(context.getResources(), R.drawable.test2);
         ArrayList<Bitmap> pictures = new ArrayList<>();
         pictures.add(img);
-        Diary toSaveDiary = new Diary(100, "哈哈哈", img, pictures, new Date());
+        Diary toSaveDiary = new Diary(100, "哈哈哈", img, pictures, new GregorianCalendar().getTime());
         diaryHelper.saveDiary(toSaveDiary);
         Diary gettedDiary = diaryHelper.getLastestDiary();
         Assert.assertEquals(toSaveDiary.getDate(), gettedDiary.getDate());
@@ -63,7 +63,7 @@ public class DiaryDataTest {
         Bitmap img = BitmapFactory.decodeResource(context.getResources(), R.drawable.test2);
         ArrayList<Bitmap> pictures = new ArrayList<>();
         pictures.add(img);
-        Diary toSaveDiary = new Diary(100, "哈哈哈", img, pictures, new Date());
+        Diary toSaveDiary = new Diary(100, "哈哈哈", img, pictures, new GregorianCalendar().getTime());
         diaryHelper.saveDiary(toSaveDiary);
         final Diary gettedDiary = diaryHelper.getLastestDiary();
         diaryHelper.updateDiary(new Realm.Transaction() {
@@ -76,17 +76,14 @@ public class DiaryDataTest {
     }
 
     @Test
-    public void testGetDiaryOfDayUsingDate() {
-        RealmResults<Diary> diaries = diaryHelper.getDiariesOfDay(new Date());
+    public void testGetDiaryOfDayUsingGregorianCalendar() {
+        RealmResults<Diary> diaries = diaryHelper.getDiariesOfDay(new GregorianCalendar());
     }
 
     @Test
-    public void testGetDiaryOfDayUsingGregorianCalendar() {
-        Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-        RealmResults<Diary> diaries = diaryHelper.getDiariesOfDay(new GregorianCalendar(year, month, day));
+    public void testGetSmilingForTime() {
+        TreeMap<Date, Double> result = diaryHelper.getHappinessForTime(2);
+        Assert.assertNotNull(result);
     }
 
 }
