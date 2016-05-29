@@ -102,6 +102,8 @@ public class WelcomePresenterImpl implements IWelcomePresenter {
                     Uri.fromFile(photoFile));
             if (intent.resolveActivity(welcomeActivity.getPackageManager()) != null) {
                 welcomeActivity.startActivityForResult(intent, REQUEST_CODE_CAMERA);
+            } else {
+                welcomeView.makeToast("相机不可用");
             }
         }
     }
