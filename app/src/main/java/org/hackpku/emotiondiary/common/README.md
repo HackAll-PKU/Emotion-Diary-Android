@@ -33,3 +33,4 @@
     - 更新Diary(updateDiary)
     - 获得最近一条Diary(getLastestDiary)
     - 获取某一天的所有Diary(getDiariesOfDay，可用Date或GregorianCalendar调用)
+    - 获取之前一段时间的快乐值(getHappinessForTime，用于绘制心情图表)
