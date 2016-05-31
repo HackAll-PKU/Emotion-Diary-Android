@@ -42,8 +42,8 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
         btnRecordEmotion.setOnClickListener(this);
         btnEnterHomepage.setOnClickListener(this);
 
-        btnRecordEmotion.setEnabled(false);
-        btnEnterHomepage.setEnabled(false);
+        btnRecordEmotion.setVisibility(View.INVISIBLE);
+        btnEnterHomepage.setVisibility(View.INVISIBLE);
 
         welcomePresenter = new WelcomePresenterImpl(this);
 
@@ -84,10 +84,10 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onLogInResult(boolean logInResult, String msg) {
-        btnRecordEmotion.setEnabled(logInResult);
-        btnEnterHomepage.setEnabled(logInResult);
-        btnLogIn.setEnabled(!logInResult);
         if (logInResult) {
+            btnRecordEmotion.setVisibility(View.VISIBLE);
+            btnEnterHomepage.setVisibility(View.VISIBLE);
+            btnLogIn.setEnabled(false);
             btnLogIn.clearAnimation();
             alphaAnimation.cancel();
             btnLogIn.setText("欢迎使用");
