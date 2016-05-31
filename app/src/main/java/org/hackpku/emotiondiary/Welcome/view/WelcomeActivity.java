@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.Button;
@@ -46,9 +47,17 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
 
         welcomePresenter = new WelcomePresenterImpl(this);
 
-        Drawable[] drawables = btnLogIn.getCompoundDrawables();
-        drawables[1].setBounds(0, 0, 500, 500);
-        btnLogIn.setCompoundDrawables(drawables[0], drawables[1], drawables[2], drawables[3]);
+        final View layout = findViewById(R.id.welcomeViewLayout);
+        layout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                layout.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                int diameter = layout.getWidth() / 2;
+                Drawable[] drawables = btnLogIn.getCompoundDrawables();
+                drawables[1].setBounds(0, 0, diameter, diameter);
+                btnLogIn.setCompoundDrawables(null, drawables[1], null, null);
+            }
+        });
 
         alphaAnimation = new AlphaAnimation(1.0f, 0.4f);
         alphaAnimation.setDuration(2000);
