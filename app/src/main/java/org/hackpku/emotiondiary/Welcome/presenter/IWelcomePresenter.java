@@ -11,5 +11,6 @@ public interface IWelcomePresenter {
     void enterHomepage();
 
     void onActivityResult(int requestCode, int resultCode, Intent data);
+    void makeAlertDialog(String title, String message);
 }
 

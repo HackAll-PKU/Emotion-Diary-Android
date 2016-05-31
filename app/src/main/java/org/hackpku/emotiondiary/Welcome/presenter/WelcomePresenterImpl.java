@@ -13,6 +13,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.support.v7.app.AlertDialog;
 
 import org.hackpku.emotiondiary.R;
 import org.hackpku.emotiondiary.Welcome.view.IWelcomeView;
@@ -23,16 +24,19 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by Archimekai on 5/24/2016.
  * Presenter是MVP模式的核心
  */
 public class WelcomePresenterImpl implements IWelcomePresenter {
-    IWelcomeView welcomeView;  // presenter通过view来操作activity的表现
-    Activity welcomeActivity;
-    FaceHelper faceHelper;
-    boolean initFlag = false;
+    private IWelcomeView welcomeView;  // presenter通过view来操作activity的表现
+    private Activity welcomeActivity;
+    private FaceHelper faceHelper;
+    private boolean initFlag = false;
+    private double smiling;
 
     public WelcomePresenterImpl(IWelcomeView welcomeView) {
         this.welcomeView = welcomeView;
@@ -186,9 +190,10 @@ public class WelcomePresenterImpl implements IWelcomePresenter {
                                 return;
                             }
                         }
-                        mHandler.sendEmptyMessage(ID_LOGIN_SUCCESS);
                         faceHelper.addFace(faceID);
                         faceHelper.train();
+                        smiling = faceHelper.getSmiling(faceID);
+                        mHandler.sendEmptyMessage(ID_LOGIN_SUCCESS);
                     } catch (FaceHelper.requestError requestError) {
                         requestError.printStackTrace();
                         Message msg = new Message();
@@ -220,18 +225,26 @@ public class WelcomePresenterImpl implements IWelcomePresenter {
     @Override
     public void recordEmotion() {
         //TODO:实现RecordEmotion后取消注释
-        //Intent intent = new Intent();
-        //intent.setClass(welcomeActivity, RecordEmotion.class);
-        //welcomeActivity.startActivity(intent);
+        /*
+        Intent intent = new Intent();
+        intent.setClass(welcomeActivity, RecordEmotion.class);
+        intent.putExtra("smiling", smiling);
+        intent.putExtra("photoPath", mCurrentPhotoPath);
+        welcomeActivity.startActivity(intent);
+        */
         welcomeView.onRecordEmotion();
     }
 
     @Override
     public void enterHomepage() {
         //TODO:实现Homepage后取消注释
-        //Intent intent = new Intent();
-        //intent.setClass(welcomeActivity, Homepage.class);
-        //welcomeActivity.startActivity(intent);
+        /*
+        Intent intent = new Intent();
+        intent.setClass(welcomeActivity, Homepage.class);
+        intent.putExtra("smiling", smiling);
+        intent.putExtra("photoPath", mCurrentPhotoPath);
+        welcomeActivity.startActivity(intent);
+        */
         welcomeView.onEnterHomepage();
     }
 
@@ -251,5 +264,26 @@ public class WelcomePresenterImpl implements IWelcomePresenter {
                 }
                 break;
         }
+    }
+
+    @Override
+    public void makeAlertDialog(String title, String message) {
+        final AlertDialog dialog =
+                new AlertDialog.Builder(welcomeActivity)
+                        .setTitle(title)
+                        .setMessage(message)
+                        .create();
+        dialog.show();
+
+        Timer timer = new Timer(true);
+        TimerTask task = new TimerTask() {
+            public void run() {
+                Message msg = new Message();
+                msg.what = ID_DIALOG_CANCEL;
+                msg.obj = dialog;
+                mHandler.sendMessage(msg);
+            }
+        };
+        timer.schedule(task, 1000);
     }
 }

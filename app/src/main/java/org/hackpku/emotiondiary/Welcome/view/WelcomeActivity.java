@@ -1,11 +1,11 @@
 package org.hackpku.emotiondiary.Welcome.view;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -13,19 +13,20 @@ import org.hackpku.emotiondiary.R;
 import org.hackpku.emotiondiary.Welcome.presenter.IWelcomePresenter;
 import org.hackpku.emotiondiary.Welcome.presenter.WelcomePresenterImpl;
 
-public class WelcomeActivity extends Activity implements View.OnClickListener, IWelcomeView {
+public class WelcomeActivity extends AppCompatActivity implements View.OnClickListener, IWelcomeView {
     private Button btnLogIn;
     private Button btnRecordEmotion;
     private Button btnEnterHomepage;
+    private AlphaAnimation alphaAnimation;
 
     IWelcomePresenter welcomePresenter; // 通过持有接口，而不是持有类，来提高代码的复用性
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);  //无title
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);  //全屏
+        getSupportActionBar().hide();
+        //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);  //全屏
+
         setContentView(R.layout.activity_welcome);
 
         // 绑定按钮
@@ -41,6 +42,13 @@ public class WelcomeActivity extends Activity implements View.OnClickListener, I
         btnEnterHomepage.setEnabled(false);
 
         welcomePresenter = new WelcomePresenterImpl(this);
+
+        alphaAnimation = new AlphaAnimation(1.0f, 0.2f);
+        alphaAnimation.setDuration(2000);
+        alphaAnimation.setRepeatCount(-1);
+        alphaAnimation.setRepeatMode(Animation.REVERSE);
+        btnLogIn.setAnimation(alphaAnimation);
+        alphaAnimation.startNow();
     }
 
     @Override
@@ -63,7 +71,11 @@ public class WelcomeActivity extends Activity implements View.OnClickListener, I
         btnRecordEmotion.setEnabled(logInResult);
         btnEnterHomepage.setEnabled(logInResult);
         btnLogIn.setEnabled(!logInResult);
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+        if (logInResult) {
+            btnLogIn.clearAnimation();
+            alphaAnimation.cancel();
+        }
+        makeAlertDialog(logInResult ? "解锁成功" : "解锁失败", msg);
     }
 
     @Override
@@ -87,6 +99,10 @@ public class WelcomeActivity extends Activity implements View.OnClickListener, I
     @Override
     public void makeToast(String str) {
         Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
+    }
+
+    private void makeAlertDialog(String title, String message) {
+        welcomePresenter.makeAlertDialog(title, message);
     }
 
     @Override
