@@ -1,12 +1,14 @@
 package org.hackpku.emotiondiary.Welcome.view;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import org.hackpku.emotiondiary.R;
@@ -43,7 +45,7 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
 
         welcomePresenter = new WelcomePresenterImpl(this);
 
-        alphaAnimation = new AlphaAnimation(1.0f, 0.2f);
+        alphaAnimation = new AlphaAnimation(1.0f, 0.4f);
         alphaAnimation.setDuration(2000);
         alphaAnimation.setRepeatCount(-1);
         alphaAnimation.setRepeatMode(Animation.REVERSE);
@@ -74,6 +76,7 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
         if (logInResult) {
             btnLogIn.clearAnimation();
             alphaAnimation.cancel();
+            btnLogIn.setText("欢迎使用");
         }
         makeAlertDialog(logInResult ? "解锁成功" : "解锁失败", msg);
     }
@@ -109,6 +112,16 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         welcomePresenter.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void changeBackgroundColorAccordingToSmiling(double smiling) {
+        RelativeLayout layout = (RelativeLayout) findViewById(R.id.welcomeViewLayout);
+        int color;
+        if (smiling < 33) color = Color.argb(255, 126, 206, 244);
+        else if (smiling > 66) color = Color.argb(255, 241, 145, 73);
+        else color = Color.argb(255, 248, 248, 124);
+
+        layout.setBackgroundColor(color);
     }
 
 }

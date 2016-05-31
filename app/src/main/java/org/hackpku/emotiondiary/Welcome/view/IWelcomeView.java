@@ -9,4 +9,5 @@ public interface IWelcomeView {
     void onRecordEmotion();
     void onEnterHomepage();
     void makeToast(String str);
+    void changeBackgroundColorAccordingToSmiling(double smiling);
 }

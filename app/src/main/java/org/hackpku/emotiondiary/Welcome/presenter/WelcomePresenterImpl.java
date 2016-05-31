@@ -78,8 +78,7 @@ public class WelcomePresenterImpl implements IWelcomePresenter {
                 }
             }.start();
             return false;
-        }
-        else return true;
+        } else return true;
     }
 
     @Override
@@ -130,6 +129,7 @@ public class WelcomePresenterImpl implements IWelcomePresenter {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case ID_LOGIN_SUCCESS:
+                    welcomeView.changeBackgroundColorAccordingToSmiling(smiling);
                     welcomeView.onLogInResult(true, "主人，欢迎回来~");
                     break;
                 case ID_LOGIN_FAILED:
