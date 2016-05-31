@@ -44,7 +44,7 @@ public class WelcomePresenterImpl implements IWelcomePresenter {
         this.faceHelper = FaceHelper.getInstance(this.welcomeActivity);
     }
 
-    private void checkPerson() {
+    private boolean checkPerson() {
         SharedPreferences sharedPreferences = welcomeActivity.getSharedPreferences(welcomeActivity.getResources().getString(R.string.FaceHelperPreference), Context.MODE_PRIVATE);
         String faceHelperPeopleID = sharedPreferences.getString(welcomeActivity.getResources().getString(R.string.FaceHelperPersonID), "this is wrong");
 
@@ -62,6 +62,10 @@ public class WelcomePresenterImpl implements IWelcomePresenter {
                         faceHelper.createPerson();
                         makeToast("用户创建成功");
                         initFlag = true;
+                        Message msg = new Message();
+                        msg.what = ID_PERSON_CREATED_RETRY_LOGIN;
+                        msg.obj = dialog;
+                        mHandler.sendMessage(msg);
                     } catch (FaceHelper.requestError requestError) {
                         requestError.printStackTrace();
                         makeToast("用户创建失败");
@@ -73,13 +77,15 @@ public class WelcomePresenterImpl implements IWelcomePresenter {
                     }
                 }
             }.start();
+            return false;
         }
+        else return true;
     }
 
     @Override
     public void doLogIn() {
         // 判断是否有用户
-        checkPerson();
+        if (!checkPerson()) return;
 
         // 检测sd是否可用
         if (!Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)) {
@@ -116,6 +122,7 @@ public class WelcomePresenterImpl implements IWelcomePresenter {
     private static final int ID_LOGIN_FAILED = 1;
     private static final int ID_DIALOG_CANCEL = 10086;
     private static final int ID_MAKE_TOAST = 65535;
+    private static final int ID_PERSON_CREATED_RETRY_LOGIN = 2333;
 
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
@@ -133,6 +140,9 @@ public class WelcomePresenterImpl implements IWelcomePresenter {
                     break;
                 case ID_MAKE_TOAST:
                     welcomeView.makeToast((String) msg.obj);
+                    break;
+                case ID_PERSON_CREATED_RETRY_LOGIN:
+                    doLogIn();
                     break;
             }
         }
