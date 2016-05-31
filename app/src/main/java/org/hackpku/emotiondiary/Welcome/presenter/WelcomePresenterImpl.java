@@ -239,7 +239,7 @@ public class WelcomePresenterImpl implements IWelcomePresenter {
         Intent intent = new Intent();
         intent.setClass(welcomeActivity, RecordEmotion.class);
         intent.putExtra("smiling", smiling);
-        intent.putExtra("photoPath", mCurrentPhotoPath);
+        intent.putExtra("photoPath", mCurrentPhotoPath); // 照片存储进Diary后即可删除
         welcomeActivity.startActivity(intent);
         */
         welcomeView.onRecordEmotion();
@@ -252,7 +252,7 @@ public class WelcomePresenterImpl implements IWelcomePresenter {
         Intent intent = new Intent();
         intent.setClass(welcomeActivity, Homepage.class);
         intent.putExtra("smiling", smiling);
-        intent.putExtra("photoPath", mCurrentPhotoPath);
+        intent.putExtra("photoPath", mCurrentPhotoPath); // 照片存储进Diary后即可删除
         welcomeActivity.startActivity(intent);
         */
         welcomeView.onEnterHomepage();
