@@ -51,6 +51,20 @@ public class DiaryHelper {
     }
 
     /**
+     * 删除一条日记
+     * @param diary 要删除的日记
+     */
+    public void deleteDiary(final Diary diary) {
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                diary.deleteFromRealm();
+                Log.v(TAG, "deleteDiary OK");
+            }
+        });
+    }
+
+    /**
      * 获取最近一条日记
      * @return 最近一条日记，若无则为null
      */
