@@ -2,6 +2,7 @@ package org.hackpku.emotiondiary.Welcome.view;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -44,6 +45,10 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
         btnEnterHomepage.setEnabled(false);
 
         welcomePresenter = new WelcomePresenterImpl(this);
+
+        Drawable[] drawables = btnLogIn.getCompoundDrawables();
+        drawables[1].setBounds(0, 0, 500, 500);
+        btnLogIn.setCompoundDrawables(drawables[0], drawables[1], drawables[2], drawables[3]);
 
         alphaAnimation = new AlphaAnimation(1.0f, 0.4f);
         alphaAnimation.setDuration(2000);
