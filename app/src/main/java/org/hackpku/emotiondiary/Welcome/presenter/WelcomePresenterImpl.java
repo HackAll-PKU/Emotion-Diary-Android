@@ -20,6 +20,7 @@ import org.hackpku.emotiondiary.Welcome.view.IWelcomeView;
 import org.hackpku.emotiondiary.common.FaceHelper.FaceHelper;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -42,6 +43,21 @@ public class WelcomePresenterImpl implements IWelcomePresenter {
         this.welcomeView = welcomeView;
         this.welcomeActivity = (Activity) welcomeView;
         this.faceHelper = FaceHelper.getInstance(this.welcomeActivity);
+
+        // 检测sd是否可用
+        if (!Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)) {
+            makeAlertDialog("外部存储不可用", "请插入SD卡。");
+        }
+
+        File[] files = welcomeActivity.getExternalFilesDir(Environment.DIRECTORY_PICTURES).listFiles(new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String filename) {
+                return filename.endsWith(".jpg");
+            }
+        });
+        for (File file : files) {
+            file.delete();
+        }
     }
 
     private boolean checkPerson() {
@@ -86,12 +102,6 @@ public class WelcomePresenterImpl implements IWelcomePresenter {
         // 判断是否有用户
         if (!checkPerson()) return;
 
-        // 检测sd是否可用
-        if (!Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)) {
-            welcomeView.makeToast("外部存储不可用");
-            return;
-        }
-
         // 实例化一个intent，并指定action
         Intent intent = new Intent();
         intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -112,7 +122,7 @@ public class WelcomePresenterImpl implements IWelcomePresenter {
             if (intent.resolveActivity(welcomeActivity.getPackageManager()) != null) {
                 welcomeActivity.startActivityForResult(intent, REQUEST_CODE_CAMERA);
             } else {
-                welcomeView.makeToast("相机不可用");
+                makeAlertDialog("相机不可用", "请确保您的设备带有摄像头并装有可以拍摄照片的应用。");
             }
         }
     }
