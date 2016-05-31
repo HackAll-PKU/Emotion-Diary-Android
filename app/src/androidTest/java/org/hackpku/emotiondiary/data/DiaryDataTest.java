@@ -59,6 +59,20 @@ public class DiaryDataTest {
     }
 
     @Test
+    public void testDeleteDiary() {
+        Bitmap img = BitmapFactory.decodeResource(context.getResources(), R.drawable.test2);
+        ArrayList<Bitmap> pictures = new ArrayList<>();
+        pictures.add(img);
+        Diary toSaveDiary = new Diary(99, "测试删除Diary", img, pictures, new GregorianCalendar().getTime());
+        diaryHelper.saveDiary(toSaveDiary);
+        Diary gettedDiary = diaryHelper.getLastestDiary();
+        Assert.assertEquals(toSaveDiary.getDate(), gettedDiary.getDate());
+        diaryHelper.deleteDiary(gettedDiary);
+        gettedDiary = diaryHelper.getLastestDiary();
+        Assert.assertNotEquals(toSaveDiary.getDate(), gettedDiary.getDate());
+    }
+
+    @Test
     public void testUpdate() {
         Bitmap img = BitmapFactory.decodeResource(context.getResources(), R.drawable.test2);
         ArrayList<Bitmap> pictures = new ArrayList<>();
