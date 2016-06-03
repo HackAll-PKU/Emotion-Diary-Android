@@ -52,7 +52,7 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onGlobalLayout() {
                 layout.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                int diameter = layout.getWidth() / 2;
+                int diameter = Math.min(layout.getWidth(), layout.getHeight()) / 2;
                 Drawable[] drawables = btnLogIn.getCompoundDrawables();
                 drawables[1].setBounds(0, 0, diameter, diameter);
                 btnLogIn.setCompoundDrawables(null, drawables[1], null, null);
