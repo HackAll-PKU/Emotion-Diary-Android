@@ -30,16 +30,19 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * Created by Archimekai on 5/24/2016.
- * Presenter是MVP模式的核心
+ * Welcome Activity的presenter实现
  */
 public class WelcomePresenterImpl implements IWelcomePresenter {
     private IWelcomeView welcomeView;  // presenter通过view来操作activity的表现
     private Activity welcomeActivity;
     private FaceHelper faceHelper;
     private boolean initFlag = false;
+    private String mCurrentPhotoPath;
     private double smiling;
 
+    /**
+     * WelcomePresenterImpl构造方法
+     */
     public WelcomePresenterImpl(IWelcomeView welcomeView) {
         this.welcomeView = welcomeView;
         this.welcomeActivity = (Activity) welcomeView;
@@ -50,6 +53,7 @@ public class WelcomePresenterImpl implements IWelcomePresenter {
             makeAlertDialog("外部存储不可用", "请插入SD卡。");
         }
 
+        // 删除遗留的jpg
         File[] files = welcomeActivity.getExternalFilesDir(Environment.DIRECTORY_PICTURES).listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File dir, String filename) {
@@ -61,46 +65,12 @@ public class WelcomePresenterImpl implements IWelcomePresenter {
         }
     }
 
-    private boolean checkPerson() {
-        SharedPreferences sharedPreferences = welcomeActivity.getSharedPreferences(welcomeActivity.getResources().getString(R.string.FaceHelperPreference), Context.MODE_PRIVATE);
-        String faceHelperPeopleID = sharedPreferences.getString(welcomeActivity.getResources().getString(R.string.FaceHelperPersonID), "this is wrong");
-
-        if (faceHelperPeopleID.equals("this is wrong")) {
-            // 显示提示框
-            final ProgressDialog dialog = new ProgressDialog(welcomeActivity);
-            dialog.setTitle("欢迎使用");
-            dialog.setMessage("这是您的第一次使用，正在为您创建用户，请稍候...");
-            dialog.show();
-
-            new Thread() {
-                @Override
-                public void run() {
-                    try {
-                        faceHelper.createPerson();
-                        makeToast("用户创建成功");
-                        initFlag = true;
-                        Message msg = new Message();
-                        msg.what = ID_PERSON_CREATED_RETRY_LOGIN;
-                        msg.obj = dialog;
-                        mHandler.sendMessage(msg);
-                    } catch (FaceHelper.requestError requestError) {
-                        requestError.printStackTrace();
-                        makeToast("用户创建失败");
-                    } finally {
-                        Message msg = new Message();
-                        msg.what = ID_DIALOG_CANCEL;
-                        msg.obj = dialog;
-                        mHandler.sendMessage(msg);
-                    }
-                }
-            }.start();
-            return false;
-        } else return true;
-    }
-
+    /**
+     * 响应解锁动作
+     */
     @Override
     public void doLogIn() {
-        // 判断是否有用户
+        // 判断是否已有用户
         if (!checkPerson()) return;
 
         // 实例化一个intent，并指定action
@@ -128,12 +98,44 @@ public class WelcomePresenterImpl implements IWelcomePresenter {
         }
     }
 
+    /**
+     * 响应记录心情
+     */
+    @Override
+    public void recordEmotion() {
+        //TODO:实现RecordEmotion后取消注释
+        /*
+        Intent intent = new Intent();
+        intent.setClass(welcomeActivity, RecordEmotionActivity.class);
+        intent.putExtra("smiling", smiling);
+        intent.putExtra("photoPath", mCurrentPhotoPath); // 照片存储进Diary后即可删除
+        welcomeActivity.startActivity(intent);
+        */
+        welcomeView.onRecordEmotion();
+    }
+
+    /**
+     * 响应进入日记
+     */
+    @Override
+    public void enterHomepage() {
+        Intent intent = new Intent();
+        intent.setClass(welcomeActivity, HomePageActivity.class);
+        intent.putExtra("smiling", smiling);
+        intent.putExtra("photoPath", mCurrentPhotoPath); // 照片存储进Diary后即可删除
+        welcomeActivity.startActivity(intent);
+
+        welcomeView.onEnterHomepage();
+    }
+
+    // message IDs
     private static final int ID_LOGIN_SUCCESS = 0;
     private static final int ID_LOGIN_FAILED = 1;
     private static final int ID_DIALOG_CANCEL = 10086;
     private static final int ID_MAKE_TOAST = 65535;
     private static final int ID_PERSON_CREATED_RETRY_LOGIN = 2333;
 
+    // Message Handler
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
         @Override
@@ -166,8 +168,6 @@ public class WelcomePresenterImpl implements IWelcomePresenter {
         mHandler.sendMessage(msg);
     }
 
-    private String mCurrentPhotoPath;
-
     private File createImageFile() throws IOException {
         // Create an image file name
         String imageFileName = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.CHINA).format(new Date());
@@ -183,7 +183,7 @@ public class WelcomePresenterImpl implements IWelcomePresenter {
         return image;
     }
 
-
+    //处理自拍后事务
     private void afterCamera() {
         // 显示提示框
         final ProgressDialog dialog = new ProgressDialog(welcomeActivity);
@@ -242,33 +242,6 @@ public class WelcomePresenterImpl implements IWelcomePresenter {
         }
     }
 
-
-    @Override
-    public void recordEmotion() {
-        //TODO:实现RecordEmotion后取消注释
-        /*
-        Intent intent = new Intent();
-        intent.setClass(welcomeActivity, RecordEmotion.class);
-        intent.putExtra("smiling", smiling);
-        intent.putExtra("photoPath", mCurrentPhotoPath); // 照片存储进Diary后即可删除
-        welcomeActivity.startActivity(intent);
-        */
-        welcomeView.onRecordEmotion();
-    }
-
-    @Override
-    public void enterHomepage() {
-        //TODO:实现Homepage后取消注释
-
-        Intent intent = new Intent();
-        intent.setClass(welcomeActivity, HomePageActivity.class);
-        intent.putExtra("smiling", smiling);
-        intent.putExtra("photoPath", mCurrentPhotoPath); // 照片存储进Diary后即可删除
-        welcomeActivity.startActivity(intent);
-
-        //welcomeView.onEnterHomepage();
-    }
-
     private static final int REQUEST_CODE_CAMERA = 1;
 
     @Override
@@ -287,6 +260,12 @@ public class WelcomePresenterImpl implements IWelcomePresenter {
         }
     }
 
+    /**
+     * 在主界面显示提示框
+     *
+     * @param title   标题
+     * @param message 信息
+     */
     @Override
     public void makeAlertDialog(String title, String message) {
         final AlertDialog dialog =
@@ -306,5 +285,42 @@ public class WelcomePresenterImpl implements IWelcomePresenter {
             }
         };
         timer.schedule(task, 1000);
+    }
+
+    private boolean checkPerson() {
+        SharedPreferences sharedPreferences = welcomeActivity.getSharedPreferences(welcomeActivity.getResources().getString(R.string.FaceHelperPreference), Context.MODE_PRIVATE);
+        String faceHelperPeopleID = sharedPreferences.getString(welcomeActivity.getResources().getString(R.string.FaceHelperPersonID), "this is wrong");
+
+        if (faceHelperPeopleID.equals("this is wrong")) {
+            // 显示提示框
+            final ProgressDialog dialog = new ProgressDialog(welcomeActivity);
+            dialog.setTitle("欢迎使用");
+            dialog.setMessage("这是您的第一次使用，正在为您创建用户，请稍候...");
+            dialog.show();
+
+            new Thread() {
+                @Override
+                public void run() {
+                    try {
+                        faceHelper.createPerson();
+                        makeToast("用户创建成功");
+                        initFlag = true;
+                        Message msg = new Message();
+                        msg.what = ID_PERSON_CREATED_RETRY_LOGIN;
+                        msg.obj = dialog;
+                        mHandler.sendMessage(msg);
+                    } catch (FaceHelper.requestError requestError) {
+                        requestError.printStackTrace();
+                        makeToast("用户创建失败");
+                    } finally {
+                        Message msg = new Message();
+                        msg.what = ID_DIALOG_CANCEL;
+                        msg.obj = dialog;
+                        mHandler.sendMessage(msg);
+                    }
+                }
+            }.start();
+            return false;
+        } else return true;
     }
 }

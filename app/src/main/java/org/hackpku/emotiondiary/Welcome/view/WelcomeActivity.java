@@ -15,6 +15,9 @@ import org.hackpku.emotiondiary.R;
 import org.hackpku.emotiondiary.Welcome.presenter.IWelcomePresenter;
 import org.hackpku.emotiondiary.Welcome.presenter.WelcomePresenterImpl;
 
+/**
+ * 欢迎/解锁界面
+ */
 public class WelcomeActivity extends AppCompatActivity implements View.OnClickListener, IWelcomeView {
     private Button btnLogIn;
     private Button btnRecordEmotion;
@@ -26,8 +29,10 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // 隐藏ActionBar
         getSupportActionBar().hide();
-        //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);  //全屏
+        // 全屏
+        //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_welcome);
 
@@ -36,15 +41,18 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
         btnRecordEmotion = (Button) this.findViewById(R.id.btnRecordEmotion);
         btnEnterHomepage = (Button) this.findViewById(R.id.btnEnterHomepage);
 
+        // 注册按钮监听器
         btnLogIn.setOnClickListener(this);
         btnRecordEmotion.setOnClickListener(this);
         btnEnterHomepage.setOnClickListener(this);
 
+        // 隐藏按钮
         btnRecordEmotion.setVisibility(View.INVISIBLE);
-        //btnEnterHomepage.setVisibility(View.INVISIBLE);
+        btnEnterHomepage.setVisibility(View.INVISIBLE);
 
         welcomePresenter = new WelcomePresenterImpl(this);
 
+        // 测量layout大小，设置icon直径
         final View layout = findViewById(R.id.welcomeViewLayout);
         layout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -57,6 +65,7 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
             }
         });
 
+        // 设置icon呼吸动画
         alphaAnimation = new AlphaAnimation(1.0f, 0.4f);
         alphaAnimation.setDuration(2000);
         alphaAnimation.setRepeatCount(-1);
@@ -65,6 +74,9 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
         alphaAnimation.startNow();
     }
 
+    /**
+     * 点击事件回调
+     */
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -80,6 +92,12 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
+    /**
+     * 处理解锁结果
+     *
+     * @param logInResult
+     * @param msg
+     */
     @Override
     public void onLogInResult(boolean logInResult, String msg) {
         if (logInResult) {
@@ -93,24 +111,35 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
         makeAlertDialog(logInResult ? "解锁成功" : "解锁失败", msg);
     }
 
+    /**
+     * RecordEmotion调用后的界面事务
+     */
     @Override
     public void onRecordEmotion() {
         //*
         Toast.makeText(this, "Record emotion called", Toast.LENGTH_SHORT).show();
         /*/
-        finish();
+        //finish();
         //*/
     }
 
+    /**
+     * EnterHomepage调用后的界面事务
+     */
     @Override
     public void onEnterHomepage() {
-        //*
+        /*
         Toast.makeText(this, "Enter homepage called", Toast.LENGTH_SHORT).show();
         /*/
-        finish();
+        //finish();
         //*/
     }
 
+    /**
+     * 显示消息
+     *
+     * @param str Toast消息
+     */
     @Override
     public void makeToast(String str) {
         Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
@@ -126,7 +155,20 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
         welcomePresenter.onActivityResult(requestCode, resultCode, data);
     }
 
+    /**
+     * 根据微笑值设置icon
+     *
+     * @param smiling 微笑值
+     */
     public void changeIconAccordingToSmiling(double smiling) {
+        Drawable[] drawables = btnLogIn.getCompoundDrawables();
+        Drawable newDrawable;
+        if (smiling < 33) newDrawable = getResources().getDrawable(R.drawable.diary_app_icon_blue);
+        else if (smiling > 66) newDrawable = getResources().getDrawable(R.drawable.diary_app_icon_orange);
+        else newDrawable = getResources().getDrawable(R.drawable.diary_app_icon_yellow);
+        newDrawable.setBounds(drawables[1].getBounds());
+        btnLogIn.setCompoundDrawables(null, newDrawable, null, null);
+
         /*
         RelativeLayout layout = (RelativeLayout) findViewById(R.id.welcomeViewLayout);
         int color;
@@ -136,12 +178,5 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
 
         //layout.setBackgroundColor(color);
         */
-        Drawable[] drawables = btnLogIn.getCompoundDrawables();
-        Drawable newDrawable;
-        if (smiling < 33) newDrawable = getResources().getDrawable(R.drawable.diary_app_icon_blue);
-        else if (smiling > 66) newDrawable = getResources().getDrawable(R.drawable.diary_app_icon_orange);
-        else newDrawable = getResources().getDrawable(R.drawable.diary_app_icon_yellow);
-        newDrawable.setBounds(drawables[1].getBounds());
-        btnLogIn.setCompoundDrawables(null, newDrawable, null, null);
     }
 }
