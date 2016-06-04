@@ -15,6 +15,7 @@ import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 
+import org.hackpku.emotiondiary.Homepage.HomePageActivity;
 import org.hackpku.emotiondiary.R;
 import org.hackpku.emotiondiary.Welcome.view.IWelcomeView;
 import org.hackpku.emotiondiary.common.FaceHelper.FaceHelper;
@@ -258,14 +259,14 @@ public class WelcomePresenterImpl implements IWelcomePresenter {
     @Override
     public void enterHomepage() {
         //TODO:实现Homepage后取消注释
-        /*
+
         Intent intent = new Intent();
-        intent.setClass(welcomeActivity, Homepage.class);
+        intent.setClass(welcomeActivity, HomePageActivity.class);
         intent.putExtra("smiling", smiling);
         intent.putExtra("photoPath", mCurrentPhotoPath); // 照片存储进Diary后即可删除
         welcomeActivity.startActivity(intent);
-        */
-        welcomeView.onEnterHomepage();
+
+        //welcomeView.onEnterHomepage();
     }
 
     private static final int REQUEST_CODE_CAMERA = 1;

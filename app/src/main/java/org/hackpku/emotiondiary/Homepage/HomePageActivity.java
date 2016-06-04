@@ -7,6 +7,7 @@ import android.widget.*;
 
 import java.util.*;
 
+import org.hackpku.emotiondiary.R;
 import org.hackpku.emotiondiary.common.Diary.*;
 
 import io.realm.*;

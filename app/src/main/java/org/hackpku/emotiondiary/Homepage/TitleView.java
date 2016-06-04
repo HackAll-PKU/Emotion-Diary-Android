@@ -5,6 +5,8 @@ import android.util.AttributeSet;
 import android.view.*;
 import android.widget.*;
 
+import org.hackpku.emotiondiary.R;
+
 /**
  * Created by Liu Zhengyuan on 2016/5/30.
  */
