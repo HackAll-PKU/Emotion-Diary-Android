@@ -19,15 +19,17 @@ import io.realm.Sort;
  */
 public class DiaryHelper {
 
+    public DiaryHelper() {
+        realm = Realm.getDefaultInstance();
+    }
+
     public DiaryHelper(Context context) {
-        this.context = context;
-        RealmConfiguration realmConfig = new RealmConfiguration.Builder(context).build();
-        Realm.setDefaultConfiguration(realmConfig);
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(context).build();
+        Realm.setDefaultConfiguration(realmConfiguration);
         realm = Realm.getDefaultInstance();
     }
 
     Realm realm;
-    private Context context;
     private String TAG = "EmotionDiary.DiaryHelper";
 
     /**
@@ -142,12 +144,6 @@ public class DiaryHelper {
         int year = date.get(Calendar.YEAR);
         int month = date.get(Calendar.MONTH);
         int day = date.get(Calendar.DAY_OF_MONTH);
-        return new GregorianCalendar(year, month, day);
-    }
-
-    @Override
-    protected void finalize() throws Throwable {
-        realm.close();
-        super.finalize();
+        return new GregorianCalendar(year, month - 1, day);
     }
 }

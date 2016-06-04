@@ -1,5 +1,6 @@
 package org.hackpku.emotiondiary.Homepage;
 
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
@@ -20,7 +21,7 @@ public class HomePageActivity extends FragmentActivity {
     private CalendarView calendarView;
     private TextView tv_date;
     private ListView lv_diary;
-    private DiaryHelper diaryHelper=new DiaryHelper(this);
+    private DiaryHelper diaryHelper=new DiaryHelper();
     private List<Map<String, Object>> diaryData = new ArrayList<Map<String, Object>>();
 
     @Override
@@ -96,7 +97,7 @@ public class HomePageActivity extends FragmentActivity {
         for(int i=0;i<diaries.size();i++) {
             Diary diary = diaries.get(i);
             Map<String, Object> map = new HashMap<String, Object>();
-            map.put("photo", diary.getSelfie());
+            map.put("photo", new BitmapDrawable(diary.getSelfie().getImage()));
 
             int emotion = diary.getHappiness();
             if (emotion>66)
@@ -115,6 +116,7 @@ public class HomePageActivity extends FragmentActivity {
             map.put("time", time);
 
             map.put("diary", diary.getText());
+            diaryData.add(map);
         }
     }
 

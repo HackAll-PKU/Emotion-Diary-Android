@@ -24,8 +24,6 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
     private Button btnRecordEmotion;
     private Button btnEnterHomepage;
     private AlphaAnimation alphaAnimation;
-    private DiaryHelper diaryHelper=new DiaryHelper(get);
-
 
     IWelcomePresenter welcomePresenter; // 通过持有接口，而不是持有类，来提高代码的复用性
 

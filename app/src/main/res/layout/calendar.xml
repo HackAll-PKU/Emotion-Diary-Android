@@ -73,10 +73,10 @@
         android:background="#ffffff"
         android:orientation="vertical" >
 
-        <com.mycompany.testview.WeekDayView
+        <org.hackpku.emotiondiary.Homepage.WeekDayView
             android:layout_width="match_parent"
             android:layout_height="30dp" />
-        <com.mycompany.testview.MonthDateView
+        <org.hackpku.emotiondiary.Homepage.MonthDateView
             android:id="@+id/monthDateView"
             android:layout_width="fill_parent"
             android:layout_height="200dp" />
