@@ -367,6 +367,7 @@ public class MonthDateView extends View {
      */
     public void setTodayToView(){
         setSelectYearMonth(mCurrYear,mCurrMonth,mCurrDay);
+        dateClick.onClickOnDate();
         invalidate();
     }
 

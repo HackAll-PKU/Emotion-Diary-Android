@@ -41,7 +41,7 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
         btnEnterHomepage.setOnClickListener(this);
 
         btnRecordEmotion.setVisibility(View.INVISIBLE);
-        btnEnterHomepage.setVisibility(View.INVISIBLE);
+        //btnEnterHomepage.setVisibility(View.INVISIBLE);
 
         welcomePresenter = new WelcomePresenterImpl(this);
 

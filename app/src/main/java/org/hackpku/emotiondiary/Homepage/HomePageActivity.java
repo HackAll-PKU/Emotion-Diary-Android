@@ -1,5 +1,6 @@
 package org.hackpku.emotiondiary.Homepage;
 
+import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -64,6 +65,7 @@ public class HomePageActivity extends FragmentActivity {
         SimpleAdapter adapter = new SimpleAdapter(this, diaryData, R.layout.diary_outline,
                 new String[]{"photo", "emotion", "time", "diary"},
                 new int[]{R.id.photo_view, R.id.emotion_view, R.id.time_text, R.id.diary_text});
+        adapter.setViewBinder(new ListViewBinder());
         lv_diary.setAdapter(adapter);
 
          //TODO 在这里添加ListViewItem的点击事件，应该是显示详细的日记
@@ -74,6 +76,23 @@ public class HomePageActivity extends FragmentActivity {
             }
         };
         lv_diary.setOnItemClickListener(listViewListener);
+    }
+
+    private class ListViewBinder implements SimpleAdapter.ViewBinder {
+
+        @Override
+        public boolean setViewValue(View view, Object data,
+                                    String textRepresentation) {
+            // TODO Auto-generated method stub
+            if((view instanceof RoundImageView) && (data instanceof Bitmap)) {
+                RoundImageView imageView = (RoundImageView) view;
+                Bitmap bmp = (Bitmap) data;
+                imageView.setImageBitmap(bmp);
+                return true;
+            }
+            return false;
+        }
+
     }
 
     /**
@@ -97,12 +116,12 @@ public class HomePageActivity extends FragmentActivity {
         for(int i=0;i<diaries.size();i++) {
             Diary diary = diaries.get(i);
             Map<String, Object> map = new HashMap<String, Object>();
-            map.put("photo", new BitmapDrawable(diary.getSelfie().getImage()));
+            map.put("photo", diary.getSelfie().getImage());
 
             int emotion = diary.getHappiness();
-            if (emotion>66)
+            if (emotion > 66)
                 map.put("emotion", R.drawable.laugh3);
-            else if (emotion>33)
+            else if (emotion > 33)
                 map.put("emotion", R.drawable.smile3);
             else
                 map.put("emotion", R.drawable.sad3);
@@ -112,7 +131,7 @@ public class HomePageActivity extends FragmentActivity {
             calendar.setTime(date);
             int hour = calendar.get(Calendar.HOUR);
             int minute = calendar.get(Calendar.MINUTE);
-            String time = hour + ":" + minute;
+            String time = String.format("%02d", hour) + ":" + String.format("%02d", minute);
             map.put("time", time);
 
             map.put("diary", diary.getText());
