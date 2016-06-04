@@ -1,8 +1,6 @@
 package org.hackpku.emotiondiary.Welcome.view;
 
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,13 +9,11 @@ import android.view.ViewTreeObserver;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.Button;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import org.hackpku.emotiondiary.R;
 import org.hackpku.emotiondiary.Welcome.presenter.IWelcomePresenter;
 import org.hackpku.emotiondiary.Welcome.presenter.WelcomePresenterImpl;
-import org.hackpku.emotiondiary.common.Diary.DiaryHelper;
 
 public class WelcomeActivity extends AppCompatActivity implements View.OnClickListener, IWelcomeView {
     private Button btnLogIn;
@@ -130,14 +126,22 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
         welcomePresenter.onActivityResult(requestCode, resultCode, data);
     }
 
-    public void changeBackgroundColorAccordingToSmiling(double smiling) {
+    public void changeIconAccordingToSmiling(double smiling) {
+        /*
         RelativeLayout layout = (RelativeLayout) findViewById(R.id.welcomeViewLayout);
         int color;
         if (smiling < 33) color = Color.argb(255, 126, 206, 244);
         else if (smiling > 66) color = Color.argb(255, 241, 145, 73);
         else color = Color.argb(255, 248, 248, 124);
 
-        layout.setBackgroundColor(color);
+        //layout.setBackgroundColor(color);
+        */
+        Drawable[] drawables = btnLogIn.getCompoundDrawables();
+        Drawable newDrawable;
+        if (smiling < 33) newDrawable = getResources().getDrawable(R.drawable.diary_app_icon_blue);
+        else if (smiling > 66) newDrawable = getResources().getDrawable(R.drawable.diary_app_icon_orange);
+        else newDrawable = getResources().getDrawable(R.drawable.diary_app_icon_yellow);
+        newDrawable.setBounds(drawables[1].getBounds());
+        btnLogIn.setCompoundDrawables(null, newDrawable, null, null);
     }
-
 }

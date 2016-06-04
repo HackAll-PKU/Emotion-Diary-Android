@@ -140,7 +140,7 @@ public class WelcomePresenterImpl implements IWelcomePresenter {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case ID_LOGIN_SUCCESS:
-                    welcomeView.changeBackgroundColorAccordingToSmiling(smiling);
+                    welcomeView.changeIconAccordingToSmiling(smiling);
                     welcomeView.onLogInResult(true, "主人，欢迎回来~");
                     break;
                 case ID_LOGIN_FAILED:
