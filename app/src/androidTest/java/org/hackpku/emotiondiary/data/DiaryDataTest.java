@@ -131,4 +131,10 @@ public class DiaryDataTest {
         Assert.assertEquals(20, (int)(diaries.last().getHappiness()));
     }
 
+    @Test
+    public void testGetHappinessForTimeAsArrayList() {
+        ArrayList<Double> result = diaryHelper.getHappinessForTimeAsArrayList(2);
+        Assert.assertNotNull(result);
+    }
+
 }

@@ -3,6 +3,7 @@ package org.hackpku.emotiondiary.common.Diary;
 import android.content.Context;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -129,6 +130,43 @@ public class DiaryHelper {
             }
             double averageHappiness = happinessCount == 0 ? 0 : happiness / happinessCount;
             result.put(nowQueryDate, averageHappiness);
+            thisDay.add(Calendar.DAY_OF_YEAR, 1);
+            nowQueryDate = thisDay.getTime();
+        }
+        return result;
+    }
+
+    /**
+     * 获取过去几天的快乐值
+     * @param days 过去几天（若为1即为只有今天）
+     * @return 返回值是心情值组成的ArrayList，顺序为从前面往今天
+     */
+    public ArrayList<Double> getHappinessForTimeAsArrayList(int days) {
+        GregorianCalendar thisDay = transformDateToGregorianCalendar(new GregorianCalendar());
+        thisDay.add(Calendar.DAY_OF_YEAR, 1);
+        Date destinationDate = thisDay.getTime();
+        thisDay.add(Calendar.DAY_OF_YEAR, -days);
+        Date nowQueryDate = thisDay.getTime();
+        RealmResults<Diary> diaries = realm.where(Diary.class).between("date", nowQueryDate, destinationDate).findAllSorted("date", Sort.ASCENDING);
+        ArrayList<Double> result = new ArrayList<>();
+        int i = 0;
+        while (nowQueryDate.getTime() < destinationDate.getTime()) {
+            int happiness = 0;
+            int happinessCount = 0;
+            while (i < diaries.size()) {
+                Diary diary = diaries.get(i);
+                long timeDelta = diary.getDate().getTime() - nowQueryDate.getTime();
+                if ((timeDelta >= 0) && (timeDelta < 24*60*60*1000)) {
+                    happiness += diary.getHappiness();
+                    happinessCount++;
+                    i++;
+                }
+                else {
+                    break;
+                }
+            }
+            double averageHappiness = happinessCount == 0 ? 0 : happiness / happinessCount;
+            result.add(averageHappiness);
             thisDay.add(Calendar.DAY_OF_YEAR, 1);
             nowQueryDate = thisDay.getTime();
         }
