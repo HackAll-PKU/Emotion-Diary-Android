@@ -24,37 +24,14 @@ import java.util.ArrayList;
  * Created by kouyuting on 2016/6/6.
  */
 public class StatsView extends FrameLayout {
-    private Button thisWeek;//显示这周心情
-    private Button thisMonth;//显示这月心情
+   // private Button thisWeek;//显示这周心情
+    //private Button thisMonth;//显示这月心情
     private boolean isThisWeek;
 
     public StatsView(Context context , AttributeSet attrs){
         super(context,attrs);
         LayoutInflater.from(context).inflate(R.layout.activity_stats, this);
-        thisWeek = (Button) findViewById(R.id.Week);
-        thisMonth = (Button) findViewById(R.id.Month);
-        isThisWeek = true;
-
-
-        setOnlistener();//初始化button的监听器
         showData();
-    }
-    /**
-     * 初始化thisWeek和thisMonth按钮点击事件
-     */
-    private void setOnlistener(){
-        thisWeek.setOnClickListener(new View.OnClickListener(){
-            @Override  //一周
-            public void onClick(View v) {
-                isThisWeek = true;
-            }
-        });
-        thisWeek.setOnClickListener(new View.OnClickListener(){
-            @Override  //一月
-            public void onClick(View v) {
-                isThisWeek = false;
-            }
-        });
     }
 
     /**

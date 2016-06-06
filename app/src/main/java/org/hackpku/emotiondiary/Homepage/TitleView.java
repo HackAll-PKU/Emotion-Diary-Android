@@ -19,7 +19,7 @@ public class TitleView extends FrameLayout {
     private Button btnCamera;
     private Button btnTimeline;
     private TextView titleText;
-    private Activity calendarActivity;
+    private Activity HomePageActivity;
     private ICalendarView calendarView;
 
 
@@ -42,8 +42,8 @@ public class TitleView extends FrameLayout {
             public void onClick(View v) {
                 //调出心情统计页面
                Intent intent = new Intent();
-              intent.setClass(calendarActivity,StatsActivity.class);
-              calendarActivity.startActivity(intent);
+              intent.setClass(HomePageActivity,StatsActivity.class);
+              HomePageActivity.startActivity(intent);
               calendarView.onStatsView();
             }
         });
