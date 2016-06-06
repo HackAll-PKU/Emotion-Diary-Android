@@ -52,12 +52,11 @@
             android:layout_weight="0dp" />
     </LinearLayout>
 
-    <org.hackpku.emotiondiary.Homepage.StatsView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/view5"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="0.84" />
+    <com.github.mikephil.charting.charts.LineChart
+    android:id="@+id/chart"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" />
+
 
     <org.hackpku.emotiondiary.Stats.StatsView
         android:layout_width="422dp"
