@@ -16,6 +16,7 @@ import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 
 import org.hackpku.emotiondiary.R;
+import org.hackpku.emotiondiary.RecordEmotion.RecordEmotionActivity;
 import org.hackpku.emotiondiary.Welcome.view.IWelcomeView;
 import org.hackpku.emotiondiary.common.FaceHelper.FaceHelper;
 
@@ -198,9 +199,10 @@ public class WelcomePresenterImpl implements IWelcomePresenter {
                 @Override
                 public void run() {
                     try {
-                        String faceID = faceHelper.uploadPhoto(bitmap);
+                        //String faceID = faceHelper.uploadPhoto(bitmap);
                         if (!initFlag) {
-                            boolean verifyResult = faceHelper.verify(faceID);
+                            boolean verifyResult = true;
+                            //boolean verifyResult = faceHelper.verify(faceID);
                             if (!verifyResult) {
                                 Message msg = new Message();
                                 msg.what = ID_LOGIN_FAILED;
@@ -210,11 +212,11 @@ public class WelcomePresenterImpl implements IWelcomePresenter {
                                 return;
                             }
                         }
-                        faceHelper.addFace(faceID);
-                        faceHelper.train();
-                        smiling = faceHelper.getSmiling(faceID);
+                        //faceHelper.addFace(faceID);
+                        //faceHelper.train();
+                        //smiling = faceHelper.getSmiling(faceID);
                         mHandler.sendEmptyMessage(ID_LOGIN_SUCCESS);
-                    } catch (FaceHelper.requestError requestError) {
+                    }/* catch (FaceHelper.requestError requestError) {
                         requestError.printStackTrace();
                         Message msg = new Message();
                         msg.what = ID_LOGIN_FAILED;
@@ -228,7 +230,7 @@ public class WelcomePresenterImpl implements IWelcomePresenter {
                         msg.obj = personIDNotFound.getMessage();
                         mHandler.sendMessage(msg);
                         if (file.exists()) file.delete();
-                    } finally {
+                    }*/ finally {
                         Message msg = new Message();
                         msg.what = ID_DIALOG_CANCEL;
                         msg.obj = dialog;
@@ -244,6 +246,11 @@ public class WelcomePresenterImpl implements IWelcomePresenter {
 
     @Override
     public void recordEmotion() {
+        Intent intent = new Intent();
+        intent.setClass(welcomeActivity, RecordEmotionActivity.class);
+        intent.putExtra("smiling",smiling);
+        intent.putExtra("photoPath",mCurrentPhotoPath);
+        welcomeActivity.startActivity(intent);
         //TODO:实现RecordEmotion后取消注释
         /*
         Intent intent = new Intent();
