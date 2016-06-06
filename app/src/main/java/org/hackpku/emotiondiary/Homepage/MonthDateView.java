@@ -83,10 +83,7 @@ public class MonthDateView extends View {
                 //绘制选中日期的背景色圆
                 int startRecX = mColumnSize * column;
                 int startRecY = mRowSize * row;
-                int endRecX = startRecX + mColumnSize;
-                int endRecY = startRecY + mRowSize;
                 mPaint.setColor(mSelectBGColor);
-                //canvas.drawRect(startRecX, startRecY, endRecX, endRecY, mPaint);
                 float r = mRowSize / 2;
                 canvas.drawCircle(startRecX + mColumnSize * 0.5F, startRecY + r, r * 0.9F, mPaint);
                 //记录第几行，即第几周
@@ -112,17 +109,6 @@ public class MonthDateView extends View {
             }
         }
     }
-
-    //TODO
-    /*private void drawCircle(int row,int column,int day,Canvas canvas){
-        if(daysHasThingList != null && daysHasThingList.size() >0){
-            if(!daysHasThingList.contains(day))return;
-            mPaint.setColor(mCircleColor);
-            float circleX = (float) (mColumnSize * column + mColumnSize*0.8);
-            float circley = (float) (mRowSize * row + mRowSize*0.2);
-            canvas.drawCircle(circleX, circley, mCircleRadius, mPaint);
-        }
-    }*/
 
     /**
      * 画圆，表明当天有日记

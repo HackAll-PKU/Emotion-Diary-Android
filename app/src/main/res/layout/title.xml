@@ -6,8 +6,8 @@
 
     <Button
         android:id="@+id/button_camera"
-        android:layout_width="45dp"
-        android:layout_height="34dp"
+        android:layout_width="40dp"
+        android:layout_height="30dp"
         android:layout_centerVertical="true"
         android:layout_marginLeft="10dp"
         android:background="@drawable/camera_white"
@@ -24,10 +24,10 @@
 
     <Button
         android:id="@+id/button_timeline"
-        android:layout_width="40dp"
-        android:layout_height="26dp"
+        android:layout_width="35dp"
+        android:layout_height="24dp"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="350dp"
+        android:layout_marginLeft="355dp"
         android:background="@drawable/ic_list_black_48dp"
         android:textColor="#fff" />
 

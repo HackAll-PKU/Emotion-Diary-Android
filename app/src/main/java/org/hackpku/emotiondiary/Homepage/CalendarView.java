@@ -96,7 +96,7 @@ public class CalendarView  extends FrameLayout {
         List<Integer> list = new ArrayList<>();
         for (int i = 1; i <= getMonthDays(year, month); i++) {  //对每一天
             GregorianCalendar date = new GregorianCalendar();
-            date.set(year, month+1, i);
+            date.set(year, month, i);
             RealmResults<Diary> diaries = diaryHelper.getDiariesOfDay(date);
             list.add(diaries.size());
         }
