@@ -30,6 +30,7 @@ public class TitleView extends FrameLayout {
         btnCamera = (Button) findViewById(R.id.button_camera);
         btnTimeline=(Button)findViewById(R.id.button_timeline);
 
+
         btnCamera.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -41,10 +42,10 @@ public class TitleView extends FrameLayout {
             @Override
             public void onClick(View v) {
                 //调出心情统计页面
-               Intent intent = new Intent();
-              intent.setClass(HomePageActivity,StatsActivity.class);
-              HomePageActivity.startActivity(intent);
-              calendarView.onStatsView();
+                Intent intent = new Intent();
+                intent.setClass(HomePageActivity,StatsActivity.class);
+                HomePageActivity.startActivity(intent);
+                calendarView.onStatsView();
             }
         });
 

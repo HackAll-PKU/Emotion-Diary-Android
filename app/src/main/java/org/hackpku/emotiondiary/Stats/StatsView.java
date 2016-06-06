@@ -45,7 +45,7 @@ public class StatsView extends FrameLayout {
         date = isThisWeek?7:30;
         ArrayList<Double> emtionsRowData = diaryHelper.getHappinessForTimeAsArrayList(date);
 
-        //绘图
+        //添加数据绘图
         ArrayList<Entry> emotions = new ArrayList<Entry>();
         for(int loop=1;loop<=date;++loop){
             Entry c1=new Entry(emtionsRowData.indexOf(loop),loop);

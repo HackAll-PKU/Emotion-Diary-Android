@@ -25,7 +25,7 @@ public class StatsActivity extends FragmentActivity {
         statsView =(StatsView) findViewById(R.id.chart);
         thisWeek = (Button) findViewById(R.id.Week);
         thisMonth = (Button) findViewById(R.id.Month);
-        isThisWeek = true;
+        this.isThisWeek = true;
         setOnlistener();//初始化button的监听器
         statsView.showData();
     }
@@ -33,14 +33,14 @@ public class StatsActivity extends FragmentActivity {
      * 初始化thisWeek和thisMonth按钮点击事件
      */
 
-    private void setOnlistener(){
+    public void setOnlistener(){
         thisWeek.setOnClickListener(new View.OnClickListener(){
             @Override  //一周
             public void onClick(View v) {
                 isThisWeek = true;
             }
         });
-        thisWeek.setOnClickListener(new View.OnClickListener(){
+        thisMonth.setOnClickListener(new View.OnClickListener(){
             @Override  //一月
             public void onClick(View v) {
                 isThisWeek = false;
