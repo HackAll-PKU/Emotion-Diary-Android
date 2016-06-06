@@ -71,7 +71,7 @@ public class StatsView extends FrameLayout {
         //绘图
         ArrayList<Entry> emotions = new ArrayList<Entry>();
         for(int loop=1;loop<=date;++loop){
-            Entry c1=new Entry(100.000f,loop);
+            Entry c1=new Entry(emtionsRowData.indexOf(loop),loop);
             emotions.add(c1);
         }
         LineDataSet setEmotions = new LineDataSet(emotions,"My Emotions");
