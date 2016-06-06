@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TreeMap;
@@ -98,6 +99,36 @@ public class DiaryDataTest {
     public void testGetSmilingForTime() {
         TreeMap<Date, Double> result = diaryHelper.getHappinessForTime(2);
         Assert.assertNotNull(result);
+    }
+
+    @Test
+    public void testAddALotOfDiary() {
+        GregorianCalendar thisDay = new GregorianCalendar();
+        for (int loop = 0; loop < 3; loop++) {
+            Bitmap img = BitmapFactory.decodeResource(context.getResources(), R.drawable.test2);
+            ArrayList<Bitmap> pictures = new ArrayList<>();
+            pictures.add(img);
+            Diary toSaveDiary = new Diary(100, "哈哈哈", img, pictures, thisDay.getTime());
+            diaryHelper.saveDiary(toSaveDiary);
+        }
+        thisDay.add(Calendar.DAY_OF_YEAR, -1);
+        for (int loop = 0; loop < 3; loop++) {
+            Bitmap img = BitmapFactory.decodeResource(context.getResources(), R.drawable.test2);
+            ArrayList<Bitmap> pictures = new ArrayList<>();
+            pictures.add(img);
+            Diary toSaveDiary = new Diary(60, "喵喵喵", img, pictures, thisDay.getTime());
+            diaryHelper.saveDiary(toSaveDiary);
+        }
+        thisDay.add(Calendar.MONTH, -1);
+        for (int loop = 0; loop < 3; loop++) {
+            Bitmap img = BitmapFactory.decodeResource(context.getResources(), R.drawable.test2);
+            ArrayList<Bitmap> pictures = new ArrayList<>();
+            pictures.add(img);
+            Diary toSaveDiary = new Diary(20, "汪汪汪", img, pictures, thisDay.getTime());
+            diaryHelper.saveDiary(toSaveDiary);
+        }
+        RealmResults<Diary> diaries = diaryHelper.getDiariesOfDay(thisDay);
+        Assert.assertEquals(20, (int)(diaries.last().getHappiness()));
     }
 
 }

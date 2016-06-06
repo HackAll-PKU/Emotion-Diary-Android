@@ -144,6 +144,6 @@ public class DiaryHelper {
         int year = date.get(Calendar.YEAR);
         int month = date.get(Calendar.MONTH);
         int day = date.get(Calendar.DAY_OF_MONTH);
-        return new GregorianCalendar(year, month - 1, day);
+        return new GregorianCalendar(year, month, day);
     }
 }
