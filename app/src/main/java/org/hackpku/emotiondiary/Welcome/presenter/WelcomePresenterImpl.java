@@ -104,14 +104,12 @@ public class WelcomePresenterImpl implements IWelcomePresenter {
      */
     @Override
     public void recordEmotion() {
-        //TODO:实现RecordEmotion后取消注释
-        /*
         Intent intent = new Intent();
         intent.setClass(welcomeActivity, RecordEmotionActivity.class);
         intent.putExtra("smiling", smiling);
         intent.putExtra("photoPath", mCurrentPhotoPath); // 照片存储进Diary后即可删除
         welcomeActivity.startActivity(intent);
-        */
+
         welcomeView.onRecordEmotion();
     }
 
@@ -200,10 +198,9 @@ public class WelcomePresenterImpl implements IWelcomePresenter {
                 @Override
                 public void run() {
                     try {
-                        //String faceID = faceHelper.uploadPhoto(bitmap);
+                        String faceID = faceHelper.uploadPhoto(bitmap);
                         if (!initFlag) {
-                            boolean verifyResult = true;
-                            //boolean verifyResult = faceHelper.verify(faceID);
+                            boolean verifyResult = faceHelper.verify(faceID);
                             if (!verifyResult) {
                                 Message msg = new Message();
                                 msg.what = ID_LOGIN_FAILED;
@@ -213,11 +210,11 @@ public class WelcomePresenterImpl implements IWelcomePresenter {
                                 return;
                             }
                         }
-                        //faceHelper.addFace(faceID);
-                        //faceHelper.train();
-                        //smiling = faceHelper.getSmiling(faceID);
+                        faceHelper.addFace(faceID);
+                        faceHelper.train();
+                        smiling = faceHelper.getSmiling(faceID);
                         mHandler.sendEmptyMessage(ID_LOGIN_SUCCESS);
-                    }/* catch (FaceHelper.requestError requestError) {
+                    } catch (FaceHelper.requestError requestError) {
                         requestError.printStackTrace();
                         Message msg = new Message();
                         msg.what = ID_LOGIN_FAILED;
@@ -231,7 +228,7 @@ public class WelcomePresenterImpl implements IWelcomePresenter {
                         msg.obj = personIDNotFound.getMessage();
                         mHandler.sendMessage(msg);
                         if (file.exists()) file.delete();
-                    }*/ finally {
+                    } finally {
                         Message msg = new Message();
                         msg.what = ID_DIALOG_CANCEL;
                         msg.obj = dialog;
@@ -242,37 +239,6 @@ public class WelcomePresenterImpl implements IWelcomePresenter {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void recordEmotion() {
-        Intent intent = new Intent();
-        intent.setClass(welcomeActivity, RecordEmotionActivity.class);
-        intent.putExtra("smiling",smiling);
-        intent.putExtra("photoPath",mCurrentPhotoPath);
-        welcomeActivity.startActivity(intent);
-        //TODO:实现RecordEmotion后取消注释
-        /*
-        Intent intent = new Intent();
-        intent.setClass(welcomeActivity, RecordEmotion.class);
-        intent.putExtra("smiling", smiling);
-        intent.putExtra("photoPath", mCurrentPhotoPath); // 照片存储进Diary后即可删除
-        welcomeActivity.startActivity(intent);
-        */
-        welcomeView.onRecordEmotion();
-    }
-
-    @Override
-    public void enterHomepage() {
-        //TODO:实现Homepage后取消注释
-        /*
-        Intent intent = new Intent();
-        intent.setClass(welcomeActivity, Homepage.class);
-        intent.putExtra("smiling", smiling);
-        intent.putExtra("photoPath", mCurrentPhotoPath); // 照片存储进Diary后即可删除
-        welcomeActivity.startActivity(intent);
-        */
-        welcomeView.onEnterHomepage();
     }
 
     private static final int REQUEST_CODE_CAMERA = 1;
