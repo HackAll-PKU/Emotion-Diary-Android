@@ -1,11 +1,16 @@
 package org.hackpku.emotiondiary.Homepage;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.*;
 import android.widget.*;
 
 import org.hackpku.emotiondiary.R;
+import org.hackpku.emotiondiary.Stats.ICalendarView;
+import org.hackpku.emotiondiary.Stats.StatsActivity;
+import org.hackpku.emotiondiary.Stats.StatsView;
 
 /**
  * Created by Liu Zhengyuan on 2016/5/30.
@@ -14,6 +19,9 @@ public class TitleView extends FrameLayout {
     private Button btnCamera;
     private Button btnTimeline;
     private TextView titleText;
+    private Activity calendarActivity;
+    private ICalendarView calendarView;
+
 
     public TitleView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -32,7 +40,11 @@ public class TitleView extends FrameLayout {
         btnTimeline.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO 时间线按钮点击事件，呼出时间线界面
+                //调出心情统计页面
+               Intent intent = new Intent();
+              intent.setClass(calendarActivity,StatsActivity.class);
+              calendarActivity.startActivity(intent);
+              calendarView.onStatsView();
             }
         });
 

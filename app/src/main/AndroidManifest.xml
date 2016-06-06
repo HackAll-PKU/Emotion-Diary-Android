@@ -23,6 +23,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".Homepage.HomePageActivity" />
+        <activity android:name=".Stats.StatsActivity"/>
     </application>
 
 </manifest>
