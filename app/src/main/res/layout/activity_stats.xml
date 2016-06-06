@@ -49,7 +49,7 @@
             android:enabled="true"
             android:singleLine="false"
             android:visibility="visible"
-            android:layout_weight="0dp" />
+            android:layout_weight="0.18" />
     </LinearLayout>
 
     <com.github.mikephil.charting.charts.LineChart
