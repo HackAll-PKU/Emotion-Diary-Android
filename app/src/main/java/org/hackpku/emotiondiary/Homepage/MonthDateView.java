@@ -72,21 +72,20 @@ public class MonthDateView extends View {
         int mMonthDays = getMonthDays(mSelYear, mSelMonth);
         int weekNumber = getFirstDayWeek(mSelYear, mSelMonth);
         Log.d("DateView", "DateView:" + mSelMonth+"月1号周" + weekNumber);
-        for(int day = 0;day < mMonthDays;day++){
+        for(int day = 0;day < mMonthDays;day++){  //对一个月中的每天
             dayString = (day + 1) + "";
             int column = (day+weekNumber - 1) % 7;
             int row = (day+weekNumber - 1) / 7;
             daysString[row][column]=day + 1;
             int startX = (int) (mColumnSize * column + (mColumnSize - mPaint.measureText(dayString))/2);
             int startY = (int) (mRowSize * row + mRowSize/2 - (mPaint.ascent() + mPaint.descent())/2);
-            if(dayString.equals(mSelDay+"")){
-                //绘制背景色矩形
+            if(dayString.equals(mSelDay+"")) {
+                //绘制选中日期的背景色圆
                 int startRecX = mColumnSize * column;
                 int startRecY = mRowSize * row;
-                int endRecX = startRecX + mColumnSize;
-                int endRecY = startRecY + mRowSize;
                 mPaint.setColor(mSelectBGColor);
-                canvas.drawRect(startRecX, startRecY, endRecX, endRecY, mPaint);
+                float r = mRowSize / 2;
+                canvas.drawCircle(startRecX + mColumnSize * 0.5F, startRecY + r, r * 0.9F, mPaint);
                 //记录第几行，即第几周
                 weekRow = row + 1;
             }
@@ -111,15 +110,45 @@ public class MonthDateView extends View {
         }
     }
 
-    private void drawCircle(int row,int column,int day,Canvas canvas){
-        if(daysHasThingList != null && daysHasThingList.size() >0){
-            if(!daysHasThingList.contains(day))return;
+    /**
+     * 画圆，表明当天有日记
+     * @param row
+     * @param column
+     * @param day
+     * @param canvas
+     */
+    private void drawCircle(int row,int column,int day,Canvas canvas) {
+        if (daysHasThingList != null && daysHasThingList.size() > 0) {
+            int count=daysHasThingList.get(day - 1);
+            if ( count == 0) return;
             mPaint.setColor(mCircleColor);
-            float circleX = (float) (mColumnSize * column + mColumnSize*0.8);
-            float circley = (float) (mRowSize * row + mRowSize*0.2);
-            canvas.drawCircle(circleX, circley, mCircleRadius, mPaint);
+            if( count == 1) {
+                float circleX = (float) (mColumnSize * column + mColumnSize * 0.5);
+                float circley = (float) (mRowSize * row + mRowSize * 1);
+                canvas.drawCircle(circleX, circley, mCircleRadius, mPaint);
+            }
+            else if( count==2){
+                float circleX = (float) (mColumnSize * column + mColumnSize * 0.4);
+                float circley = (float) (mRowSize * row + mRowSize * 1);
+                canvas.drawCircle(circleX, circley, mCircleRadius, mPaint);
+                circleX = (float) (mColumnSize * column + mColumnSize * 0.6);
+                circley = (float) (mRowSize * row + mRowSize * 1);
+                canvas.drawCircle(circleX, circley, mCircleRadius, mPaint);
+            }
+            else{
+                float circleX = (float) (mColumnSize * column + mColumnSize * 0.5);
+                float circley = (float) (mRowSize * row + mRowSize * 1);
+                canvas.drawCircle(circleX, circley, mCircleRadius, mPaint);
+                circleX = (float) (mColumnSize * column + mColumnSize * 0.3);
+                circley = (float) (mRowSize * row + mRowSize * 1);
+                canvas.drawCircle(circleX, circley, mCircleRadius, mPaint);
+                circleX = (float) (mColumnSize * column + mColumnSize * 0.7);
+                circley = (float) (mRowSize * row + mRowSize * 1);
+                canvas.drawCircle(circleX, circley, mCircleRadius, mPaint);
+            }
         }
     }
+
     @Override
     public boolean performClick() {
         return super.performClick();
@@ -226,6 +255,7 @@ public class MonthDateView extends View {
             month = month-1;
         }
         setSelectYearMonth(year,month,day);
+        dateClick.onClickOnDate();
         invalidate();
     }
 
@@ -247,6 +277,7 @@ public class MonthDateView extends View {
             month = month + 1;
         }
         setSelectYearMonth(year,month,day);
+        dateClick.onClickOnDate();
         invalidate();
     }
 

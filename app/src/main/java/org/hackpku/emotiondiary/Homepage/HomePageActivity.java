@@ -50,7 +50,7 @@ public class HomePageActivity extends FragmentActivity {
                 tv_date.setText(calendarView.getSelMonth() + "月" + calendarView.getSelDay() + "日");
                 //显示当天日记
                 GregorianCalendar date=new  GregorianCalendar();
-                date.set(calendarView.getSelYear(),calendarView.getSelMonth(),calendarView.getSelDay());
+                date.set(calendarView.getSelYear(),calendarView.getSelMonth()-1,calendarView.getSelDay());
                 RealmResults<Diary> diaries= diaryHelper.getDiariesOfDay(date);
                 SetData(diaries);
                 SetListView();
@@ -101,7 +101,7 @@ public class HomePageActivity extends FragmentActivity {
     private void setToday() {
         GregorianCalendar date=new  GregorianCalendar();
         Calendar calendar = Calendar.getInstance();  //今天
-        date.set(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH)+1,calendar.get(Calendar.DATE));
+        date.set(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DATE));
         RealmResults<Diary> diaries= diaryHelper.getDiariesOfDay(date);
         SetData(diaries);
         SetListView();
@@ -137,37 +137,6 @@ public class HomePageActivity extends FragmentActivity {
             map.put("diary", diary.getText());
             diaryData.add(map);
         }
-    }
-
-    /**
-     * 临时，展示用
-     * @return
-     */
-    private List<Map<String, Object>> getData() {
-        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("photo", R.drawable.portrait);
-        map.put("emotion", R.drawable.laugh3);
-        map.put("time", "7:00");
-        map.put("diary", "我今天心情很好");
-        list.add(map);
-
-        map = new HashMap<String, Object>();
-        map.put("photo", R.drawable.portrait);
-        map.put("emotion", R.drawable.smile3);
-        map.put("time", "9:00");
-        map.put("diary", "我今天心情不错");
-        list.add(map);
-
-        map = new HashMap<String, Object>();
-        map.put("photo", R.drawable.portrait);
-        map.put("emotion", R.drawable.sad3);
-        map.put("time", "11:00");
-        map.put("diary", "我今天心情一般");
-        list.add(map);
-
-        return list;
     }
 
 }
