@@ -15,10 +15,10 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity
-            android:name=".Welcome.view.WelcomeActivity"
-            android:screenOrientation="portrait">
+        android:name=".MainApplication"
+        android:theme="@style/AppTheme">
+        <activity android:name=".Welcome.view.WelcomeActivity"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,6 +27,7 @@
         </activity>
         <activity android:name=".RecordEmotion.RecordEmotionActivity" />
         <activity android:name=".showDiaryActivity"></activity>
+        <activity android:name=".Homepage.HomePageActivity" />
     </application>
 
 </manifest>
