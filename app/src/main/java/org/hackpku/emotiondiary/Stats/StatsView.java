@@ -1,26 +1,23 @@
 package org.hackpku.emotiondiary.Stats;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.*;
 
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.data.DataSet;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import org.hackpku.emotiondiary.R;
-import org.hackpku.emotiondiary.common.Diary.Diary;
 import org.hackpku.emotiondiary.common.Diary.DiaryHelper;
 
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.TreeMap;
 
 
 /**
@@ -46,8 +43,18 @@ public class StatsView extends FrameLayout {
      * 初始化thisWeek和thisMonth按钮点击事件
      */
     private void setOnlistener(){
-        thisWeek.setOnClickListener((v)->{isThisWeek=true});
-        thisMonth.setOnClickListener((v)->{isThisWeek=false});
+        thisWeek.setOnClickListener(new View.OnClickListener(){
+            @Override  //一周
+            public void onClick(View v) {
+                isThisWeek = true;
+            }
+        });
+        thisWeek.setOnClickListener(new View.OnClickListener(){
+            @Override  //一月
+            public void onClick(View v) {
+                isThisWeek = false;
+            }
+        });
     }
 
     /**
@@ -59,24 +66,28 @@ public class StatsView extends FrameLayout {
         int date;
         //过去一个月的统计值心情，不在乎1天2天的
         date = isThisWeek?7:30;
-
+        ArrayList<Double> emtionsRowData = diaryHelper.getHappinessForTimeAsArrayList(date);
 
         //绘图
         ArrayList<Entry> emotions = new ArrayList<Entry>();
         for(int loop=1;loop<=date;++loop){
-            
+            Entry c1=new Entry(100.000f,loop);
+            emotions.add(c1);
         }
+        LineDataSet setEmotions = new LineDataSet(emotions,"My Emotions");
+        setEmotions.setAxisDependency(YAxis.AxisDependency.LEFT);
+
+        ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
+        dataSets.add(setEmotions);
+
+        ArrayList<String> xVals = new ArrayList<String>();
+
+        LineData data = new LineData(xVals, dataSets);
+        chart.setData(data);
+        chart.invalidate(); // refresh
 
     }
 
 
 
     }
-
-
-
-
-
-
-
-}
