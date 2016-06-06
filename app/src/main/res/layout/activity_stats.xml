@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/Title"
+        android:text="   心情统计" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center|right">
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="80dp"
+            android:layout_height="30dp"
+            android:text="一周心情"
+            android:id="@+id/Week"
+            android:nestedScrollingEnabled="false"
+            android:textColor="@color/primary_material_dark"
+            android:textStyle="normal"
+            android:background="@android:color/tab_indicator_text"
+            android:backgroundTint="#eeeef0"
+            android:clickable="true"
+            android:contextClickable="true"
+            android:enabled="true"
+            android:singleLine="false"
+            android:visibility="visible" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="80dp"
+            android:layout_height="30dp"
+            android:text="一月心情"
+            android:id="@+id/Month"
+            android:nestedScrollingEnabled="false"
+            android:textColor="@color/primary_material_dark"
+            android:textStyle="normal"
+            android:background="@android:color/tab_indicator_text"
+            android:backgroundTint="#eeeef0"
+            android:clickable="true"
+            android:contextClickable="true"
+            android:enabled="true"
+            android:singleLine="false"
+            android:visibility="visible"
+            android:layout_weight="0dp" />
+    </LinearLayout>
+
+    <org.hackpku.emotiondiary.Homepage.StatsView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/view5"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.84" />
+
+    <org.hackpku.emotiondiary.Stats.StatsView
+        android:layout_width="422dp"
+        android:layout_height="172dp"
+        android:id="@+id/view6"
+        android:layout_gravity="bottom"
+        android:layout_weight="0.18" />
+
+</LinearLayout>
