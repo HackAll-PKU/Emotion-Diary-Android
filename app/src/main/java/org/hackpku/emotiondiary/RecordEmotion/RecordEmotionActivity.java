@@ -1,6 +1,9 @@
 package org.hackpku.emotiondiary.RecordEmotion;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -8,6 +11,8 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -62,7 +67,7 @@ public class RecordEmotionActivity extends AppCompatActivity {
         int color;
 
         Intent intent = getIntent();
-        double smiling = intent.getDoubleExtra("smiling", 0);
+        double smiling = ((MainApplication)getApplication()).getSmiling();
         if (smiling < 33) color = R.color.themeColorBlue;
         else if (smiling > 66) color = R.color.themeColorOrange;
         else color =  R.color.themeColorYellow;
@@ -154,23 +159,52 @@ public class RecordEmotionActivity extends AppCompatActivity {
 
     }
     public void saveData(){
-        SeekBar seekBar = (SeekBar) findViewById(R.id.seekBar);
-        int happiness = seekBar.getProgress();
-        ((MainApplication)getApplication()).setSmiling(happiness);
+        // 显示提示框
+        final ProgressDialog dialog = new ProgressDialog(this);
+        dialog.setTitle("正在保存");
+        dialog.setMessage("正在保存您的心情日记，请稍候...");
+        dialog.show();
 
-        EditText editText = (EditText) findViewById(R.id.editText);
-        String text = editText.getText().toString();
+        new Thread() {
+            @Override
+            public void run() {
+                SeekBar seekBar = (SeekBar) findViewById(R.id.seekBar);
+                int happiness = seekBar.getProgress();
+                ((MainApplication)getApplication()).setSmiling(happiness);
 
-        Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath);
-        Calendar calendar = Calendar.getInstance();
-        Diary diary = new Diary(happiness, text, bitmap, Pictures, calendar.getTime());
-        DiaryHelper diaryHelper = new DiaryHelper(getApplicationContext());
-        diaryHelper.saveDiary(diary);
+                EditText editText = (EditText) findViewById(R.id.editText);
+                String text = editText.getText().toString();
 
-        Intent intent = new Intent();
-        intent.setClass(getApplicationContext(), HomePageActivity.class);
-        this.startActivity(intent);
+                Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath);
+                Calendar calendar = Calendar.getInstance();
+                Diary diary = new Diary(happiness, text, bitmap, Pictures, calendar.getTime());
+                DiaryHelper diaryHelper = new DiaryHelper(getApplicationContext());
+                diaryHelper.saveDiary(diary);
 
-        finish();
+                Message msg = new Message();
+                msg.what = ID_DIARY_SAVED;
+                msg.obj = dialog;
+                mHandler.sendMessage(msg);
+            }
+        }.start();
     }
+
+    private static final int ID_DIARY_SAVED = 10086;
+
+    // Message Handler
+    @SuppressLint("HandlerLeak")
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case ID_DIARY_SAVED:
+                    ((Dialog) msg.obj).cancel();
+                    Intent intent = new Intent();
+                    intent.setClass(getApplicationContext(), HomePageActivity.class);
+                    startActivity(intent);
+                    finish();
+                    break;
+            }
+        }
+    };
 }
