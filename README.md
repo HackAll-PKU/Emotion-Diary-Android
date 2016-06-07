@@ -39,12 +39,113 @@ Emotion-Diary最早是我在参加北京大学2015年举办的黑客马拉松时
 	<img src="./introduction-resource/stat_view_yellow.jpg" width=30% height=30%>
 	9. 感谢胡顺昕同学友情出演~
 
+## 程序介绍
+- 本来是按照MVP架构来写的，但是最后由于有些小伙伴时间太紧了没有严格按照架构来，只有Welcome界面是按照MVP架构来写的
+- 优点：
+	- Model层测试覆盖率100%
+	- Model层文档全
+	- 具有“主题”切换能力，即不同心情时自动对应不同主题
+	- 界面美观（有设计稿）
+- 仍可扩展的方面
+	- 代码目前耦合有点高，还是要实践MVP架构来完成解耦（且具有丰富的接口结构，易于理解和维护）
+	- 部分代码有些混乱，存在拷贝粘贴的情况，应重构
+	- 可以拓展社交功能
+- 使用的第三方库：
+	- Realm（数据存储，陈乐天使用）[https://realm.io](https://realm.io)
+	- MPAndroidChart（图表，寇雨婷使用）[https://github.com/PhilJay/MPAndroidChart](https://github.com/PhilJay/MPAndroidChart)
+
+## 感想
+### 陈乐天
+
+
+
+### 胡顺昕
+主要完成了欢迎解锁页面和全局主题管理部分
+#### 欢迎解锁页面
+##### 简介
+
+该部分是此应用的Launcher Activity，主要实现欢迎和自拍解锁的界面和业务逻辑，并对接其他Activities。用户可以通过点按自拍按钮拍摄自己的自拍来解锁应用，软件后台调用相关API去识别人脸并判断是否是本机用户，验证通过后用户可以启动记录心情、进入日记的界面。
+
+##### 界面部分（View）
+
+- 界面部分主要使用到了矢量Drawable的绘制，Drawable的运行时改变（根据人脸识别出的心情值改变Icon颜色），RelativeLayout的运行时measure（通过`ViewTreeObserver.OnGlobalLayoutListener`实现），AlphaAnimation的使用（Icon的呼吸效果），AlertDialog和ProgressDialog的使用与控制等等。
+- 图形化界面元素与Android Material Design设计标准相贴合，美观简约。
+
+##### 逻辑部分（Presenter）
+
+- 包括一系列对用户有效性的判断（是否有摄像头、外部存储等必须的硬件、人脸识别与解锁逻辑等），以及界面控制逻辑（在主线程更新界面，而在其他线程进行CPU或IO繁忙的操作），初次使用引导用户创建账户等。
+- **可读性强**，变量命名格式和常量定义规范，方法简洁。
+- **健壮性强**，多采用卫语句，异常的捕获和抛出比较完善，保证软件入口的安全性。
+- **可扩充性强**，采用MVP设计模式，前后端分离；通过持有接口而不是持有类来增强可扩展性。
+- 通过Message - Handler模式处理异步事件。线程在CPU或IO繁忙操作结束后，向mHandler发送相关消息，触发界面的更新。
+
+#### 全局主题管理
+
+当识别出用户的心情或用户通过拖动滑条设置心情后，整个APP的主题色会随之改变（忧郁蓝/普通黄/开心橙）。为此，我实现了一个全局主题管理机制：
+
+- 在APP的主Application`MainApplication`类中，定义了`smiling`变量（用于全局保存心情值）和三个Theme常量。
+- 所有心情值的改变，会同步到MainApplication中
+- 所有Activity的onCreate方法中，通过`MainApplication`中定义的方法取得当前主题，并设置为自身主题，如：
+
+```java
+setTheme(((MainApplication) getApplication()).getThemeId());
+```
+- 在某些Activity的onStart方法中，判断心情值的变化，必要时重新载入当前Activity以实现主题的动态改变。
+
+```java
+@Override
+protected void onStart() {
+   super.onStart();
+   if (currentTheme != ((MainApplication)getApplication()).getThemeId()){
+       Intent intent = getIntent();
+       overridePendingTransition(0, 0);
+       intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+       finish();
+       overridePendingTransition(0, 0);
+       startActivity(intent);
+   }
+}
+```
+
+### 寇雨婷
+第一次写安卓开发，真的很艰苦，几乎是面向StackOverFlow编程。。
+我主要负责心情统计这部分。
+这个页面主要功能是将一个月心情或者一周心情汇成图表展现给用户看。最难的是页面转换和调用第三方库MPAndroidChart。利用Button来进行图表呈现内容的调换。
+在队友和Google的帮助下艰难地学习着安卓开发的View-Presenter-Activity的框架逻辑，并第一次尝试用Intent激发Activity进行换页。
+第三方库MPAndroidChart功能很强大，能够实现很多很精美的图表，还有很强大的功能。通过在Build.Gradle引入第三方库后，就可以实现我们现在这么精美的图表了。我们还通过修饰实现了可触摸可转变大小的活动图表。
+
+发现掌握一门java后还能写出安卓APP，看着它第一次在手机上运行起来的时候真的很激动。获得了老师的赞赏和认同我们特别感动，觉得考试周一周的夜没有白刷。
+
+### 刘证源
+我主要完成主界面（HomePage）的编写，这个界面功能在于显示一个日历，通过点击日期，可以获取和展示当天的所有日记。我主要工作是写了一些自定义控件，包括TitleView（标题栏），RoundImageView（圆形图片控件），DiaryOutlineView（日记概览控件），以及CalendarView（日历控件），并写了相应的布局xml文件，并把这些控件组织成了HomePageActivity。其中比较困难的部分是由于Android的ListView控件功能比较单薄，需要进行改写才能完成添加自定义控件和展示内存图。日历控件和圆形图片控件参考学习了网上的代码，并按照我们程序的要求进行了相应的修改。
+经过这次大作业，我第一次体验了手机应用的开发，在巩固了java语言的同时也算接触和学习了一门新的编程语言。
+参考代码
+http://www.open-open.com/lib/view/open1418871189839.html
+http://www.jcodecraeer.com/a/anzhuokaifa/androidkaifa/2015/0930/3538.html
+
+### 马嬴超
+RecordEmotionActivity 和 ShowDiaryActivity 由我完成。
+
+其中 RecordEmotionActivity 记录用户输入的日记、照片、题图和心情，提供文本框、照片获取器和滑动选择器完成这项输入。调用 Diary 类来生成日记的一个实例，调用 DiaryHelper 类来将日记保存在内部存储。
+
+这个活动的主题受到 trackBar 的回应。根据 trackBar 的数据，主题会在三种颜色中切换。题图是满宽的图片，从上一活动的图像中获取，心情的默认值从上一活动的图像计算得到。题图只有一张而不可改变，照片存储在 ArrayList<Bitmap> 当中，可以有多张，并且是可选的。
+
+RecordEmotionActivity 的动作栏上有完成按钮。点击后，将调用 DiaryHelper 类生成一个日记，保存在内部存储中。
+
+ShowDiary 显示用户从列表中选择的日记，主题受到心情值的回应，采取 progressBar 展示这一数值。
+
+展示的过程中采用了 Google 推荐的设计方法，采用 ToolBar 作为 ActionBar 以增强兼容性。
+
+### 温凯
+见[./introduction-resource/Emotion-diary UI设计稿.docx](./introduction-resource/Emotion-diary UI设计稿.docx)
+
+
 ## 贡献者（按姓名排序）
-- 陈乐天
-- 胡顺昕
-- 寇雨婷
+- 陈乐天 sunshinecltzac@gmail.com
+- 胡顺昕 s.hu@pku.edu.cn
+- 寇雨婷 liuzhengyuan1995@pku.edu.cn
 - 刘证源
-- 马嬴超
+- 马嬴超 i@yingchao.ma
 - 温凯
 
 
