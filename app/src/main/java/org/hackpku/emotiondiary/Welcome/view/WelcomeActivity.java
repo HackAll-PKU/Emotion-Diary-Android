@@ -125,7 +125,6 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onRecordEmotion() {
         //*
-        Toast.makeText(this, "Record emotion called", Toast.LENGTH_SHORT).show();
         /*/
         //finish();
         //*/
