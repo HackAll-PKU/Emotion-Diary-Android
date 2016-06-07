@@ -3,7 +3,7 @@
 - 本文档由陈乐天编辑（以下部分内容采用第一人称讲述），贡献者包括所有组员
 
 ## 项目概述
-此项目为Emotion-Diary（情绪日记）的在安卓平台上的版本[Github地址](https://github.com/HackAll-PKU/Emotion-Diary-Android)
+此项目为Emotion-Diary（情绪日记）的在安卓平台上的版本[Github地址](https://github.com/HackAll-PKU/Emotion-Diary-Android)请访问Github来阅读这份README，否则图片无法加载
 
 ### 来源
 Emotion-Diary最早是我在参加北京大学2015年举办的黑客马拉松时的一个想法，当时由于时间有限，我和我的小伙伴们只实现了iOS版本的Emotion-Diary。最后展示的时候有很多人都对Emotion-Diary的想法感兴趣，但是有点无奈他们只有安卓手机，没有办法装上。刚好这学期选了JAVA程序设计，经组员们商量后决定我们要实现一个安卓版本的Emotion-Diary
