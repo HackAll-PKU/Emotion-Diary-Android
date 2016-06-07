@@ -8,7 +8,7 @@
     android:paddingLeft="0dp"
     android:paddingRight="0dp"
     android:paddingTop="0dp"
-    tools:context="org.hackpku.emotiondiary.showDiaryActivity">
+    tools:context=".ShowDiary.showDiaryActivity">
 
     <LinearLayout
         android:orientation="vertical"

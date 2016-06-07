@@ -25,7 +25,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".RecordEmotion.RecordEmotionActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".showDiaryActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity android:name=".ShowDiary.showDiaryActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity android:name=".Homepage.HomePageActivity" />
     </application>
 

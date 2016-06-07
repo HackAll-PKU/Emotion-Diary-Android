@@ -1,19 +1,18 @@
-package org.hackpku.emotiondiary;
+package org.hackpku.emotiondiary.ShowDiary;
 
-import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.hackpku.emotiondiary.MainApplication;
+import org.hackpku.emotiondiary.R;
 import org.hackpku.emotiondiary.common.Diary.Diary;
 import org.hackpku.emotiondiary.common.Diary.DiaryPicture;
-
-import java.util.Properties;
 
 
 public class showDiaryActivity extends AppCompatActivity {
@@ -27,6 +26,14 @@ public class showDiaryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_show_diary);
         Toolbar toolbar = (Toolbar) findViewById(R.id.showDiaryToolbar);
         toolbar.setTitle("查看日记");
+
+        double smiling = ((MainApplication)getApplication()).getSmiling();
+        int color;
+        if (smiling < 33) color = R.color.themeColorBlue;
+        else if (smiling > 66) color = R.color.themeColorOrange;
+        else color =  R.color.themeColorYellow;
+        toolbar.setBackgroundColor(getResources().getColor(color));
+        
         setSupportActionBar(toolbar);
 
         Intent intent = getIntent();
