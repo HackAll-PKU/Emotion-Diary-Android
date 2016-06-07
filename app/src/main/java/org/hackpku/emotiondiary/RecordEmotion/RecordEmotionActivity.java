@@ -170,5 +170,7 @@ public class RecordEmotionActivity extends AppCompatActivity {
         Intent intent = new Intent();
         intent.setClass(getApplicationContext(), HomePageActivity.class);
         this.startActivity(intent);
+
+        finish();
     }
 }
