@@ -59,12 +59,12 @@ Emotion-Diary最早是我在参加北京大学2015年举办的黑客马拉松时
 ### 陈乐天
 我主要完成了Model层的部分，主要包括与Face++API交互的部分，以及日记的存取、心情值的存取，包括Model层的所有测试代码
 #### FaceHelper
-- common文件夹下的FaceHelper实现了与Face++API的交互，其使用说明有详细的[文档](./app/src/main/java/org.hackpku.emotiondiary/common/FaceHelper)，接口也有详细注释
-- 其测试代码位于[FaceHelperTest.java](./app/src/androidTest/java/org.hackpku.emotiondiary/api/FaceHelperTest.java)，保证测试覆盖率100%
+- common文件夹下的FaceHelper实现了与Face++API的交互，其使用说明有详细的文档，位于./app/src/main/java/org.hackpku.emotiondiary/common/FaceHelper，接口也有详细注释
+- 其测试代码位于./app/src/androidTest/java/org.hackpku.emotiondiary/api/FaceHelperTest.java，保证测试覆盖率100%
 
 #### Diary部分
 - common文件夹下Diary文件夹下的类实现了Diary的存取，包括心情值的存取，其接口有详细的注释
-- 测试代码位于[DiaryDataTest.java](./app/src/androidTest/java/org.hackpku.emotiondiary/data/DiaryDataTest.java)，保证测试覆盖率100%
+- 测试代码位于./app/src/androidTest/java/org.hackpku.emotiondiary/data/DiaryDataTest.java，保证测试覆盖率100%
 
 #### 感想
 - 这次开发的Model层全部都是我一个人完成的，本来是由两个人来做Model的，前面也说过我上次已经做过iOS端的开发了，所以我对这部分内容会比较熟悉，所以就我一个人来完成了，也算是任务合理分配吧
