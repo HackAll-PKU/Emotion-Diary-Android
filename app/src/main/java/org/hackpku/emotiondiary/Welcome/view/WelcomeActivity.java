@@ -11,6 +11,7 @@ import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.Toast;
 
+import org.hackpku.emotiondiary.MainApplication;
 import org.hackpku.emotiondiary.R;
 import org.hackpku.emotiondiary.Welcome.presenter.IWelcomePresenter;
 import org.hackpku.emotiondiary.Welcome.presenter.WelcomePresenterImpl;
@@ -23,6 +24,7 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
     private Button btnRecordEmotion;
     private Button btnEnterHomepage;
     private AlphaAnimation alphaAnimation;
+    private double smiling = 0;
 
     IWelcomePresenter welcomePresenter; // 通过持有接口，而不是持有类，来提高代码的复用性
 
@@ -72,6 +74,12 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
         alphaAnimation.setRepeatMode(Animation.REVERSE);
         btnLogIn.setAnimation(alphaAnimation);
         alphaAnimation.startNow();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        this.changeIconAccordingToSmiling(((MainApplication)getApplication()).getSmiling());
     }
 
     /**
@@ -161,6 +169,8 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
      * @param smiling 微笑值
      */
     public void changeIconAccordingToSmiling(double smiling) {
+        if (this.smiling == smiling) return;
+        this.smiling = smiling;
         Drawable[] drawables = btnLogIn.getCompoundDrawables();
         Drawable newDrawable;
         if (smiling < 33) newDrawable = getResources().getDrawable(R.drawable.diary_app_icon_blue);

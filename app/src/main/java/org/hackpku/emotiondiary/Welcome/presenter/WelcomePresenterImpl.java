@@ -16,6 +16,7 @@ import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 
 import org.hackpku.emotiondiary.Homepage.HomePageActivity;
+import org.hackpku.emotiondiary.MainApplication;
 import org.hackpku.emotiondiary.R;
 import org.hackpku.emotiondiary.Welcome.view.IWelcomeView;
 import org.hackpku.emotiondiary.common.FaceHelper.FaceHelper;
@@ -214,6 +215,7 @@ public class WelcomePresenterImpl implements IWelcomePresenter {
                         faceHelper.addFace(faceID);
                         faceHelper.train();
                         smiling = faceHelper.getSmiling(faceID);
+                        ((MainApplication) welcomeActivity.getApplication()).setSmiling(smiling);
                         mHandler.sendEmptyMessage(ID_LOGIN_SUCCESS);
                     } catch (FaceHelper.requestError requestError) {
                         requestError.printStackTrace();
