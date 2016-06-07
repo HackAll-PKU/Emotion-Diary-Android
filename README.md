@@ -20,23 +20,23 @@ Emotion-Diary最早是我在参加北京大学2015年举办的黑客马拉松时
 	6. 等待
 	7. Emotion-Diary就装上你的手机啦~
 - 使用简介
-	1. 刚进入时为解锁界面，此时需要点击中间的图标进行解锁（第一次进入为注册人脸）
-	![welcome](./introduction-resource/welcome.jpg)
-	2. 拍照后程序会识别拍下来的脸是不是和以前你拍的脸是同一个人（除了第一次进入不需要验证），如果是则开锁，否则返回步骤1
-	![unlocking](./introduction-resource/unlocking.jpg)
-	![unlock_fail](./introduction-resource/unlock_fail.jpg)
-	![unlock_successfully](./introduction-resource/unlock_successfully.jpg)
-	3. 解锁后可记录心情或查看以前的日记
-	4. 记录心情页面会自动捕捉你刚才拍照时候的心情值，当然你也可以手动修改，然后输入日记的内容
-	![record_diary](./introduction-resource/record_diary.jpg)
-	5. 然后保存日记
-	![saving_diary](./introduction-resource/saving_diary.jpg)
-	6. 查看以前的日记
-	![homepage](./introduction-resource/homepage.jpg)
-	7. 查看心情走势
-	![stat](./introduction-resource/stat_view_red.jpg)
-	8. 整个应用的色调都会随着你刚开始解锁拍照的那张图片的心情值改变而改变~例如下图的心情走势图色调就和上面的不一样~
-	![stat_change_color](./introduction-resource/stat_view_yellow.jpg)
+	1. 刚进入时为解锁界面，此时需要点击中间的图标进行解锁（第一次进入为注册人脸）<br>
+	<img src="./introduction-resource/welcome.jpg" width=30% height=30%>
+	2. 拍照后程序会识别拍下来的脸是不是和以前你拍的脸是同一个人（除了第一次进入不需要验证），如果是则开锁，否则返回步骤1<br>
+	<img src="./introduction-resource/unlocking.jpg" width=30% height=30%>
+	<img src="./introduction-resource/unlock_fail.jpg" width=30% height=30%>
+	<img src="./introduction-resource/unlock_successfully.jpg" width=30% height=30%>
+	3. 解锁后可记录心情或查看以前的日记<br>
+	4. 记录心情页面会自动捕捉你刚才拍照时候的心情值，当然你也可以手动修改，然后输入日记的内容<br>
+	<img src="./introduction-resource/record_diary.jpg" width=30% height=30%>
+	5. 然后保存日记<br>
+	<img src="./introduction-resource/saving_diary.jpg" width=30% height=30%>
+	6. 查看以前的日记<br>
+	<img src="./introduction-resource/homepage.jpg" width=30% height=30%>
+	7. 查看心情走势<br>
+	<img src="./introduction-resource/stat_view_red.jpg" width=30% height=30%>
+	8. 整个应用的色调都会随着你刚开始解锁拍照的那张图片的心情值改变而改变~例如下图的心情走势图色调就和上面的不一样~<br>
+	<img src="./introduction-resource/stat_view_yellow.jpg" width=30% height=30%>
 	9. 感谢胡顺昕同学友情出演~
 
 ## 贡献者（按姓名排序）
