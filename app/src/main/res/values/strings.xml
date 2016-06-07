@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">EmotionDiary</string>
+    <string name="new_emotion_hint">现在心情怎样？</string>
 </resources>

@@ -18,6 +18,7 @@ import android.support.v7.app.AlertDialog;
 import org.hackpku.emotiondiary.Homepage.HomePageActivity;
 import org.hackpku.emotiondiary.MainApplication;
 import org.hackpku.emotiondiary.R;
+import org.hackpku.emotiondiary.RecordEmotion.RecordEmotionActivity;
 import org.hackpku.emotiondiary.Welcome.view.IWelcomeView;
 import org.hackpku.emotiondiary.common.FaceHelper.FaceHelper;
 
@@ -104,14 +105,12 @@ public class WelcomePresenterImpl implements IWelcomePresenter {
      */
     @Override
     public void recordEmotion() {
-        //TODO:实现RecordEmotion后取消注释
-        /*
         Intent intent = new Intent();
         intent.setClass(welcomeActivity, RecordEmotionActivity.class);
         intent.putExtra("smiling", smiling);
         intent.putExtra("photoPath", mCurrentPhotoPath); // 照片存储进Diary后即可删除
         welcomeActivity.startActivity(intent);
-        */
+
         welcomeView.onRecordEmotion();
     }
 
