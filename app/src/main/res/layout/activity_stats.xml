@@ -4,11 +4,13 @@
     android:layout_height="match_parent"
     android:weightSum="1">
 
-    <EditText
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/Title"
-        android:text="   心情统计" />
+        android:text="   心情统计"
+        android:layout_margin="6dp"
+        android:textSize="15dp" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -25,7 +27,7 @@
             android:nestedScrollingEnabled="false"
             android:textColor="@color/primary_material_dark"
             android:textStyle="normal"
-            android:background="@color/accent_material_dark"
+            android:background="@android:color/background_light"
             android:backgroundTint="#eeeef0"
             android:clickable="true"
             android:contextClickable="true"
@@ -42,7 +44,7 @@
             android:nestedScrollingEnabled="false"
             android:textColor="@color/primary_material_dark"
             android:textStyle="normal"
-            android:background="@color/switch_thumb_normal_material_light"
+            android:background="@android:color/background_light"
             android:backgroundTint="#eeeef0"
             android:clickable="true"
             android:contextClickable="true"
