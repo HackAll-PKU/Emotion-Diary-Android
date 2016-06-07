@@ -43,6 +43,7 @@ public class StatsActivity extends FragmentActivity {
         chart.getXAxis().setDrawGridLines(false);
         chart.getAxisLeft().setDrawGridLines(false);
         chart.setDescription("一周心情");
+        chart.getLegend().setEnabled(false);
         thisWeek = (Button) findViewById(R.id.Week);
         thisMonth = (Button) findViewById(R.id.Month);
         this.isThisWeek = true;
@@ -87,7 +88,7 @@ public class StatsActivity extends FragmentActivity {
             emotions.add(c1);
             xVals.add("");
         }
-        LineDataSet setEmotions = new LineDataSet(emotions, "My Emotions");
+        LineDataSet setEmotions = new LineDataSet(emotions, "");
         setEmotions.setDrawCubic(true);
         setEmotions.setDrawFilled(true);
         setEmotions.setFillColor(Color.argb(0, 255, 194, 73));
