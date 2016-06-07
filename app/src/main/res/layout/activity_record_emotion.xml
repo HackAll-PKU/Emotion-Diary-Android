@@ -90,7 +90,8 @@
                 android:id="@+id/addNewImageButton"
                 android:src="@drawable/plus_320px_1197037_easyicon"
                 android:onClick="addNewImage"
-                android:scaleType="fitXY" />
+                android:scaleType="fitXY"
+                android:background="#00ffffff" />
         </LinearLayout>
 
     </LinearLayout>

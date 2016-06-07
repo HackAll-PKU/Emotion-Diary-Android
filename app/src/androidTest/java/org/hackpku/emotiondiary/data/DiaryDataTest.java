@@ -120,6 +120,7 @@ public class DiaryDataTest {
             diaryHelper.saveDiary(toSaveDiary);
         }
         thisDay.add(Calendar.MONTH, -1);
+        thisDay.add(Calendar.DAY_OF_MONTH, 10);
         for (int loop = 0; loop < 3; loop++) {
             Bitmap img = BitmapFactory.decodeResource(context.getResources(), R.drawable.test2);
             ArrayList<Bitmap> pictures = new ArrayList<>();
