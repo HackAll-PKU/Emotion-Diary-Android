@@ -53,11 +53,25 @@ Emotion-Diary最早是我在参加北京大学2015年举办的黑客马拉松时
 - 使用的第三方库：
 	- Realm（数据存储，陈乐天使用）[https://realm.io](https://realm.io)
 	- MPAndroidChart（图表，寇雨婷使用）[https://github.com/PhilJay/MPAndroidChart](https://github.com/PhilJay/MPAndroidChart)
+	- 使用Face++的API[Face++](http://www.faceplusplus.com.cn)
 
 ## 感想
 ### 陈乐天
+我主要完成了Model层的部分，主要包括与Face++API交互的部分，以及日记的存取、心情值的存取，包括Model层的所有测试代码
+#### FaceHelper
+- common文件夹下的FaceHelper实现了与Face++API的交互，其使用说明有详细的[文档](./app/src/main/java/org.hackpku.emotiondiary/common/FaceHelper)，接口也有详细注释
+- 其测试代码位于[FaceHelperTest.java](./app/src/androidTest/java/org.hackpku.emotiondiary/api/FaceHelperTest.java)，保证测试覆盖率100%
 
+#### Diary部分
+- common文件夹下Diary文件夹下的类实现了Diary的存取，包括心情值的存取，其接口有详细的注释
+- 测试代码位于[DiaryDataTest.java](./app/src/androidTest/java/org.hackpku.emotiondiary/data/DiaryDataTest.java)，保证测试覆盖率100%
 
+#### 感想
+- 这次开发的Model层全部都是我一个人完成的，本来是由两个人来做Model的，前面也说过我上次已经做过iOS端的开发了，所以我对这部分内容会比较熟悉，所以就我一个人来完成了，也算是任务合理分配吧
+- 我所做的工作主要就是为所有的界面提供接口，无论是面向网络（Face++的接口）还是面向本地（存储），虽然我的工作不涉及到界面，但是我也要思考界面层的同学们怎么样调这个接口才能够更加舒服，让时间精力更少地花费在要接口、互调、交流上面，所以我不仅有精心设计的接口，也有非常丰富的注释和文档，让调用者不费什么时间就可以轻松获取到我写好的服务。保证测试覆盖率100%也避免了了后面界面层调用我的接口时跟我反映说返回的数据怎么不对啊然后我再去改，再交流的低效率开发
+- 在存储方面我采用了Realm，一个移动端非常火的数据库，一方面是看到它的使用用户非常广泛，显然是一个非常成熟的数据库系统，另一方面是考虑到它针对移动端进行了性能和API的优化，所以果断没有使用相对更加难用的sqlite
+- 我也是第一次做安卓开发，所以中间遇到了非常多的问题，很多时候都是面向Google和StackOverflow编程，但是这次也积累了不少经验，给同伴们review代码也做了一些界面方面的工作
+- 熬夜还是值得的2333
 
 ### 胡顺昕
 主要完成了欢迎解锁页面和全局主题管理部分
@@ -143,8 +157,8 @@ ShowDiary 显示用户从列表中选择的日记，主题受到心情值的回�
 ## 贡献者（按姓名排序）
 - 陈乐天 sunshinecltzac@gmail.com
 - 胡顺昕 s.hu@pku.edu.cn
-- 寇雨婷 liuzhengyuan1995@pku.edu.cn
-- 刘证源
+- 寇雨婷 yutingkou@pku.edu.cn
+- 刘证源 liuzhengyuan1995@pku.edu.cn
 - 马嬴超 i@yingchao.ma
 - 温凯
 
