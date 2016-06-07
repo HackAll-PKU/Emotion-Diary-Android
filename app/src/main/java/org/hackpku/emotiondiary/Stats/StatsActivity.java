@@ -14,6 +14,7 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
+import org.hackpku.emotiondiary.MainApplication;
 import org.hackpku.emotiondiary.R;
 import org.hackpku.emotiondiary.common.Diary.DiaryHelper;
 
@@ -34,6 +35,7 @@ public class StatsActivity extends AppCompatActivity {
      */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(((MainApplication) getApplication()).getThemeId());
         setContentView(R.layout.activity_stats);
         setTitle("心情统计");
         chart = (LineChart) findViewById(R.id.chart);
