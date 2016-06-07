@@ -3,6 +3,7 @@ package org.hackpku.emotiondiary.common.Diary;
 import android.content.Context;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -19,15 +20,17 @@ import io.realm.Sort;
  */
 public class DiaryHelper {
 
+    public DiaryHelper() {
+        realm = Realm.getDefaultInstance();
+    }
+
     public DiaryHelper(Context context) {
-        this.context = context;
-        RealmConfiguration realmConfig = new RealmConfiguration.Builder(context).build();
-        Realm.setDefaultConfiguration(realmConfig);
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(context).build();
+        Realm.setDefaultConfiguration(realmConfiguration);
         realm = Realm.getDefaultInstance();
     }
 
     Realm realm;
-    private Context context;
     private String TAG = "EmotionDiary.DiaryHelper";
 
     /**
@@ -134,6 +137,43 @@ public class DiaryHelper {
     }
 
     /**
+     * 获取过去几天的快乐值
+     * @param days 过去几天（若为1即为只有今天）
+     * @return 返回值是心情值组成的ArrayList，顺序为从前面往今天
+     */
+    public ArrayList<Double> getHappinessForTimeAsArrayList(int days) {
+        GregorianCalendar thisDay = transformDateToGregorianCalendar(new GregorianCalendar());
+        thisDay.add(Calendar.DAY_OF_YEAR, 1);
+        Date destinationDate = thisDay.getTime();
+        thisDay.add(Calendar.DAY_OF_YEAR, -days);
+        Date nowQueryDate = thisDay.getTime();
+        RealmResults<Diary> diaries = realm.where(Diary.class).between("date", nowQueryDate, destinationDate).findAllSorted("date", Sort.ASCENDING);
+        ArrayList<Double> result = new ArrayList<>();
+        int i = 0;
+        while (nowQueryDate.getTime() < destinationDate.getTime()) {
+            int happiness = 0;
+            int happinessCount = 0;
+            while (i < diaries.size()) {
+                Diary diary = diaries.get(i);
+                long timeDelta = diary.getDate().getTime() - nowQueryDate.getTime();
+                if ((timeDelta >= 0) && (timeDelta < 24*60*60*1000)) {
+                    happiness += diary.getHappiness();
+                    happinessCount++;
+                    i++;
+                }
+                else {
+                    break;
+                }
+            }
+            double averageHappiness = happinessCount == 0 ? 0 : happiness / happinessCount;
+            result.add(averageHappiness);
+            thisDay.add(Calendar.DAY_OF_YEAR, 1);
+            nowQueryDate = thisDay.getTime();
+        }
+        return result;
+    }
+
+    /**
      * 将date中的年月日提取出来构造GregorianCalendar对象（舍弃时间信息，仅保留日期信息）
      * @param date GregorianCalendar对象
      * @return 转换好的GregorianCalendar对象
@@ -143,11 +183,5 @@ public class DiaryHelper {
         int month = date.get(Calendar.MONTH);
         int day = date.get(Calendar.DAY_OF_MONTH);
         return new GregorianCalendar(year, month, day);
-    }
-
-    @Override
-    protected void finalize() throws Throwable {
-        realm.close();
-        super.finalize();
     }
 }

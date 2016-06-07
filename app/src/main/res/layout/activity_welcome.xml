@@ -37,7 +37,7 @@
         android:id="@+id/btnLogIn"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:drawableTop="@drawable/diary_app_icon"
+        android:drawableTop="@drawable/diary_app_icon_blue"
         android:drawablePadding="@dimen/activity_vertical_margin"
         android:background="?android:attr/selectableItemBackgroundBorderless" />
 </RelativeLayout>

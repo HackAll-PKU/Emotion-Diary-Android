@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:imagecontrol="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- border_outside_color 外部圆圈的颜色 -->
+    <!-- border_inside_color 内部部圆圈的颜色 -->
+    <!-- border_thickness 外圆和内圆的宽度 -->
+    <org.hackpku.emotiondiary.Homepage.RoundImageView
+        android:layout_width="88dp"
+        android:layout_height="88dp"
+        android:src="@drawable/portrait"
+        imagecontrol:border_inside_color="#bc0978"
+        imagecontrol:border_outside_color="#ba3456"
+        imagecontrol:border_thickness="1dp"
+        android:id="@+id/photo_view"
+        android:layout_x="20dp"
+        android:layout_y="12dp" />
+
+    <!-- 没有指定圆形ImageView属性时，默认没有外边圆颜色 -->
+    <!-- 需要将图片资源自定为src ，或在程序中setImageResource(res) 不能设置background为图片，这样不能达到圆形效果-->
+    <org.hackpku.emotiondiary.Homepage.RoundImageView
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:src="@drawable/laugh3"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/view"
+        android:layout_toEndOf="@+id/view"
+        android:layout_x="80dp"
+        android:layout_y="62dp"
+        android:id="@+id/emotion_view"/>
+
+    <TextView
+        android:id="@+id/time_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="21:28"
+        android:textColor="#3366CC"
+        android:textSize="22sp"
+        android:layout_x="129dp"
+        android:layout_y="2dp" />
+
+    <TextView
+        android:id="@+id/diary_text"
+        android:layout_width="match_parent"
+        android:layout_height="98dp"
+        android:layout_centerInParent="true"
+        android:text="我今天心情不错"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:layout_x="131dp"
+        android:layout_y="28dp" />
+
+</AbsoluteLayout>

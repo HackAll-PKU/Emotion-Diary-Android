@@ -68,9 +68,11 @@ public class FaceHelper {
      */
     public String uploadPhoto(final Bitmap img) throws requestError {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        float scale = Math.min(1, Math.min(600f / img.getWidth(), 600f / img.getHeight()));
+        float aspectRatio = (float)img.getWidth() / (float)img.getHeight();
+        float scaleWidth = Math.min(1, 600f / img.getWidth());
+        float scaleHeight = Math.min(1, 600f / aspectRatio / img.getHeight());
         Matrix matrix = new Matrix();
-        matrix.postScale(scale, scale);
+        matrix.postScale(scaleWidth, scaleHeight);
 
         Bitmap imgSmall = Bitmap.createBitmap(img, 0, 0, img.getWidth(), img.getHeight(), matrix, false);
 
