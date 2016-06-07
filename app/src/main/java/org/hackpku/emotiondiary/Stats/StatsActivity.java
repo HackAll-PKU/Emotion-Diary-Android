@@ -3,6 +3,7 @@ package org.hackpku.emotiondiary.Stats;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
@@ -21,7 +22,7 @@ import java.util.ArrayList;
 /**
  * Created by lenovo on 2016/6/7.
  */
-public class StatsActivity extends FragmentActivity {
+public class StatsActivity extends AppCompatActivity {
     private Button thisWeek;//显示这周心情
     private Button thisMonth;//显示这月心情
     private LineChart chart;
@@ -34,6 +35,7 @@ public class StatsActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stats);
+        setTitle("心情统计");
         chart = (LineChart) findViewById(R.id.chart);
         chart.setDrawGridBackground(false);
         chart.setGridBackgroundColor(Color.argb(0, 255, 255, 255));
