@@ -4,13 +4,22 @@
     android:layout_height="match_parent"
     android:weightSum="1">
 
-    <TextView
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/Title"
-        android:text="   心情统计"
-        android:layout_margin="6dp"
-        android:textSize="15dp" />
+        android:layout_height="53dp"
+        android:layout_gravity="center_horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/Title"
+            android:text="   心情统计"
+            android:layout_margin="6dp"
+            android:textSize="15dp"
+            android:layout_gravity="center|bottom|right" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:orientation="horizontal"

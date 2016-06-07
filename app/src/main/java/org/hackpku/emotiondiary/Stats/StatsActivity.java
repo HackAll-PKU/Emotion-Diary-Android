@@ -1,5 +1,6 @@
 package org.hackpku.emotiondiary.Stats;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
@@ -26,6 +27,7 @@ public class StatsActivity extends FragmentActivity {
     private LineChart chart;
     private boolean isThisWeek;
 
+
     /**
      * 显示页面
      */
@@ -33,6 +35,14 @@ public class StatsActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stats);
         chart = (LineChart) findViewById(R.id.chart);
+        chart.setDrawGridBackground(false);
+        chart.setGridBackgroundColor(Color.argb(0, 255, 255, 255));
+        chart.setTouchEnabled(true);
+        chart.setScaleEnabled(true);
+        chart.setDrawBorders(false);
+        chart.getXAxis().setDrawGridLines(false);
+        chart.getAxisLeft().setDrawGridLines(false);
+        chart.setDescription("一周心情");
         thisWeek = (Button) findViewById(R.id.Week);
         thisMonth = (Button) findViewById(R.id.Month);
         this.isThisWeek = true;
@@ -48,6 +58,7 @@ public class StatsActivity extends FragmentActivity {
             @Override  //一周
             public void onClick(View v) {
                 isThisWeek = true;
+                chart.setDescription("一周心情");
                 showData();
             }
         });
@@ -55,6 +66,7 @@ public class StatsActivity extends FragmentActivity {
             @Override  //一月
             public void onClick(View v) {
                 isThisWeek = false;
+                chart.setDescription("一月心情");
                 showData();
             }
         });
@@ -76,16 +88,18 @@ public class StatsActivity extends FragmentActivity {
             xVals.add("");
         }
         LineDataSet setEmotions = new LineDataSet(emotions, "My Emotions");
+        setEmotions.setDrawCubic(true);
+        setEmotions.setDrawFilled(true);
+        setEmotions.setFillColor(Color.argb(0, 255, 194, 73));
+        setEmotions.setFillAlpha(100);
         setEmotions.setAxisDependency(YAxis.AxisDependency.LEFT);
 
         ArrayList<ILineDataSet> dataSets = new ArrayList<>();
         dataSets.add(setEmotions);
 
-
         LineData data = new LineData(xVals, dataSets);
         chart.setData(data);
         chart.invalidate(); // refresh
-
     }
 
 }
