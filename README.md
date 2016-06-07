@@ -24,7 +24,7 @@ Emotion-Diary最早是我在参加北京大学2015年举办的黑客马拉松时
 	![welcome](./introduction-resource/welcome.jpg)
 	2. 拍照后程序会识别拍下来的脸是不是和以前你拍的脸是同一个人（除了第一次进入不需要验证），如果是则开锁，否则返回步骤1
 	![unlocking](./introduction-resource/unlocking.jpg)
-	![unlock_fail](./introduction-resource/unlock-fail.jpg)
+	![unlock_fail](./introduction-resource/unlock_fail.jpg)
 	![unlock_successfully](./introduction-resource/unlock_successfully.jpg)
 	3. 解锁后可记录心情或查看以前的日记
 	4. 记录心情页面会自动捕捉你刚才拍照时候的心情值，当然你也可以手动修改，然后输入日记的内容
