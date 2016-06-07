@@ -6,11 +6,10 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.Menu;
@@ -23,11 +22,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 
+import org.hackpku.emotiondiary.Homepage.HomePageActivity;
+import org.hackpku.emotiondiary.MainApplication;
 import org.hackpku.emotiondiary.R;
-import org.hackpku.emotiondiary.Welcome.presenter.WelcomePresenterImpl;
 import org.hackpku.emotiondiary.common.Diary.Diary;
 import org.hackpku.emotiondiary.common.Diary.DiaryHelper;
-import org.hackpku.emotiondiary.common.Diary.DiaryPicture;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,8 +46,6 @@ public class RecordEmotionActivity extends AppCompatActivity {
             case R.id.action_ok:
                 saveData();
                 return true;
-            case R.id.action_camera:
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -59,9 +56,17 @@ public class RecordEmotionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_record_emotion);
         Toolbar toolbar = (Toolbar) findViewById(R.id.recordEmotionToolbar);
         toolbar.setTitle("记录心情");
-        setSupportActionBar(toolbar);
+        int color;
+
         Intent intent = getIntent();
         double smiling = intent.getDoubleExtra("smiling", 0);
+        if (smiling < 33) color = R.color.themeColorBlue;
+        else if (smiling > 66) color = R.color.themeColorOrange;
+        else color =  R.color.themeColorYellow;
+        toolbar.setBackgroundColor(getResources().getColor(color));
+
+        setSupportActionBar(toolbar);
+
         String mCurrentPath = intent.getStringExtra("photoPath");
         SeekBar seekBar = (SeekBar) findViewById(R.id.seekBar);
         seekBar.setProgress((int)smiling*seekBar.getMax());
@@ -71,6 +76,7 @@ public class RecordEmotionActivity extends AppCompatActivity {
 
 
     }
+
 
     private String mCurrentPhotoPath;
     @Override
@@ -146,6 +152,7 @@ public class RecordEmotionActivity extends AppCompatActivity {
     public void saveData(){
         SeekBar seekBar = (SeekBar) findViewById(R.id.seekBar);
         int happiness = seekBar.getProgress();
+        ((MainApplication)getApplication()).setSmiling(happiness);
 
         EditText editText = (EditText) findViewById(R.id.editText);
         String text = editText.getText().toString();
@@ -155,5 +162,9 @@ public class RecordEmotionActivity extends AppCompatActivity {
         Diary diary = new Diary(happiness, text, bitmap, Pictures, calendar.getTime());
         DiaryHelper diaryHelper = new DiaryHelper(getApplicationContext());
         diaryHelper.saveDiary(diary);
+
+        Intent intent = new Intent();
+        intent.setClass(getApplicationContext(), HomePageActivity.class);
+        this.startActivity(intent);
     }
 }

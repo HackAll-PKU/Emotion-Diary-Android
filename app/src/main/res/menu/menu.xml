@@ -2,7 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_ok"
-        android:icon="@drawable/Ok_183px_1190933_easyicon.net"
+        android:icon="@drawable/ok"
         android:title="完成"
         app:showAsAction="ifRoom"/>
 </menu>
