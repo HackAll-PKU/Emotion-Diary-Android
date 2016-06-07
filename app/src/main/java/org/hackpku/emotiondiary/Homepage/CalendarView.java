@@ -22,7 +22,6 @@ public class CalendarView  extends FrameLayout {
     private ImageView iv_right;  //进入下个月
     private TextView tv_date;  //显示当天的日期
     private TextView tv_week;  //显示当天的星期
-    private TextView tv_today;  //"今天"按钮
     private MonthDateView monthDateView;  //月历视图
     private DiaryHelper diaryHelper=new DiaryHelper();
 
@@ -34,7 +33,6 @@ public class CalendarView  extends FrameLayout {
         monthDateView = (MonthDateView) findViewById(R.id.monthDateView);
         tv_date = (TextView) findViewById(R.id.date_text);
         tv_week = (TextView) findViewById(R.id.week_text);
-        tv_today = (TextView) findViewById(R.id.tv_today);
         monthDateView.setTextView(tv_date, tv_week);
 
         int year = monthDateView.getmSelYear();
@@ -52,41 +50,37 @@ public class CalendarView  extends FrameLayout {
 
             @Override  //上个月
             public void onClick(View v) {
-                int year = monthDateView.getmSelYear();
-                int month = monthDateView.getmSelMonth();
-                if (month == 0)
-                    monthDateView.setDaysHasThingList(getMonthList(year - 1, 11));
-                else
-                    monthDateView.setDaysHasThingList(getMonthList(year, month - 1));
-                monthDateView.onLeftClick();
+                new Thread() {
+                    public void run() {
+                        int year = monthDateView.getmSelYear();
+                        int month = monthDateView.getmSelMonth();
+                        if (month == 0)
+                            monthDateView.setDaysHasThingList(getMonthList(year - 1, 11));
+                        else
+                            monthDateView.setDaysHasThingList(getMonthList(year, month - 1));
+                        monthDateView.onLeftClick();
+                    }
+                }.start();
             }
         });
 
         iv_right.setOnClickListener(new View.OnClickListener() {
-
             @Override  //下个月
             public void onClick(View v) {
-                int year = monthDateView.getmSelYear();
-                int month = monthDateView.getmSelMonth();
-                if (month == 11)
-                    monthDateView.setDaysHasThingList(getMonthList(year + 1, 0));
-                else
-                    monthDateView.setDaysHasThingList(getMonthList(year, month + 1));
-                monthDateView.onRightClick();
+                new Thread() {
+                    public void run() {
+                        int year = monthDateView.getmSelYear();
+                        int month = monthDateView.getmSelMonth();
+                        if (month == 11)
+                            monthDateView.setDaysHasThingList(getMonthList(year + 1, 0));
+                        else
+                            monthDateView.setDaysHasThingList(getMonthList(year, month + 1));
+                        monthDateView.onRightClick();
+                    }
+                }.start();
             }
         });
 
-        tv_today.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Calendar calendar = Calendar.getInstance();
-                int currYear = calendar.get(Calendar.YEAR);
-                int currMonth = calendar.get(Calendar.MONTH);
-                monthDateView.setDaysHasThingList(getMonthList(currYear, currMonth));
-                monthDateView.setTodayToView();
-            }
-        });
     }
 
     /**
@@ -94,6 +88,7 @@ public class CalendarView  extends FrameLayout {
      */
     private List<Integer> getMonthList(int year,int month) {
         List<Integer> list = new ArrayList<>();
+        DiaryHelper diaryHelper=new DiaryHelper();
         for (int i = 1; i <= getMonthDays(year, month); i++) {  //对每一天
             GregorianCalendar date = new GregorianCalendar();
             date.set(year, month, i);

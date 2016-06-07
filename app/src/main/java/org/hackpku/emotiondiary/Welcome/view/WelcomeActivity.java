@@ -49,7 +49,7 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
         btnEnterHomepage.setOnClickListener(this);
 
         // 隐藏按钮
-       //btnRecordEmotion.setVisibility(View.INVISIBLE);
+        //btnRecordEmotion.setVisibility(View.INVISIBLE);
         //btnEnterHomepage.setVisibility(View.INVISIBLE);
 
         welcomePresenter = new WelcomePresenterImpl(this);
@@ -125,7 +125,6 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onRecordEmotion() {
         //*
-        Toast.makeText(this, "Record emotion called", Toast.LENGTH_SHORT).show();
         /*/
         //finish();
         //*/

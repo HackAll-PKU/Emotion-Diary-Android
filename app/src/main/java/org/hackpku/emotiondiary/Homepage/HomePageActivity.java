@@ -1,14 +1,18 @@
 package org.hackpku.emotiondiary.Homepage;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.*;
 
 import java.util.*;
 
+import org.hackpku.emotiondiary.MainApplication;
 import org.hackpku.emotiondiary.R;
 import org.hackpku.emotiondiary.common.Diary.*;
 
@@ -24,9 +28,12 @@ public class HomePageActivity extends FragmentActivity {
     private ListView lv_diary;
     private DiaryHelper diaryHelper=new DiaryHelper();
     private List<Map<String, Object>> diaryData = new ArrayList<Map<String, Object>>();
+    private int currentTheme;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        currentTheme = ((MainApplication)getApplication()).getThemeId();
+        setTheme(currentTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
         calendarView = (CalendarView) findViewById(R.id.calendar_view);
@@ -40,6 +47,19 @@ public class HomePageActivity extends FragmentActivity {
         setToday();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (currentTheme != ((MainApplication)getApplication()).getThemeId()){
+            Intent intent = getIntent();
+            overridePendingTransition(0, 0);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            finish();
+            overridePendingTransition(0, 0);
+            startActivity(intent);
+        }
+    }
+
     /**
      * 设置日期的点击事件
      */
@@ -48,15 +68,31 @@ public class HomePageActivity extends FragmentActivity {
             @Override
             public void onClickOnDate() {
                 tv_date.setText(calendarView.getSelMonth() + "月" + calendarView.getSelDay() + "日");
-                //显示当天日记
-                GregorianCalendar date=new  GregorianCalendar();
-                date.set(calendarView.getSelYear(),calendarView.getSelMonth()-1,calendarView.getSelDay());
-                RealmResults<Diary> diaries= diaryHelper.getDiariesOfDay(date);
-                SetData(diaries);
-                SetListView();
+                new Thread() {
+                    public void run() {
+                        //显示当天日记，这里改成线程
+                        DiaryHelper diaryHelper=new DiaryHelper();
+                        GregorianCalendar date = new GregorianCalendar();
+                        date.set(calendarView.getSelYear(), calendarView.getSelMonth() - 1, calendarView.getSelDay());
+                        RealmResults<Diary> diaries = diaryHelper.getDiariesOfDay(date);
+                        SetData(diaries);
+                        handler.sendEmptyMessage(ID_SET_LIST_VIEW);
+                    }
+                }.start();
             }
         });
     }
+
+    private  static final int ID_SET_LIST_VIEW = 10086;
+    private Handler handler=new Handler(){
+        public void handleMessage(Message msg){
+            switch (msg.what){
+                case ID_SET_LIST_VIEW:
+                    SetListView();
+                    break;
+            }
+        }
+    };
 
     /**
      * 设置显示日记摘要的ListView

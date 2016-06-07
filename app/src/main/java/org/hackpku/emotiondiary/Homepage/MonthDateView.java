@@ -4,6 +4,8 @@ import android.content.*;
 import android.graphics.*;
 import android.graphics.Paint.*;
 //import android.text.format.DateUtils;
+import android.os.Handler;
+import android.os.Message;
 import android.text.format.DateUtils;
 import android.util.*;
 import android.view.*;
@@ -255,9 +257,20 @@ public class MonthDateView extends View {
             month = month-1;
         }
         setSelectYearMonth(year,month,day);
-        dateClick.onClickOnDate();
-        invalidate();
+        handler.sendEmptyMessage(ID_REPAINT);
     }
+
+    private  static final int ID_REPAINT = 10086;
+    private Handler handler=new Handler(){
+        public void handleMessage(Message msg){
+            switch (msg.what){
+                case ID_REPAINT:
+                    dateClick.onClickOnDate();
+                    invalidate();
+                    break;
+            }
+        }
+    };
 
     /**
      * 右点击，日历向前翻页
@@ -277,8 +290,7 @@ public class MonthDateView extends View {
             month = month + 1;
         }
         setSelectYearMonth(year,month,day);
-        dateClick.onClickOnDate();
-        invalidate();
+        handler.sendEmptyMessage(ID_REPAINT);
     }
 
     /**

@@ -8,7 +8,7 @@
     android:paddingLeft="0dp"
     android:paddingRight="0dp"
     android:paddingTop="0dp"
-    tools:context="org.hackpku.emotiondiary.showDiaryActivity">
+    tools:context=".ShowDiary.showDiaryActivity">
 
     <LinearLayout
         android:orientation="vertical"
@@ -21,7 +21,7 @@
             android:id="@+id/showDiaryToolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="#607d8b"
             android:elevation="4dp"
             android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
@@ -30,21 +30,38 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:id="@+id/showImageView"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:elevation="4dp" />
 
-        <ProgressBar
-            style="?android:attr/progressBarStyleHorizontal"
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/showProgressBar"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="心情"
+                android:id="@+id/textView" />
+
+            <ProgressBar
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/showProgressBar"
+                android:layout_gravity="center_horizontal" />
+        </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:text="New Text"
             android:id="@+id/textView2"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:background="#e0e0e0"
+            android:layout_marginTop="10dp" />
 
         <LinearLayout
             android:orientation="horizontal"

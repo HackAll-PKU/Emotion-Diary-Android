@@ -2,12 +2,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="58dp"
+    android:id="@+id/layout"
     android:background="#3366CC" >
 
     <Button
         android:id="@+id/button_camera"
-        android:layout_width="40dp"
-        android:layout_height="30dp"
+        android:layout_width="38dp"
+        android:layout_height="28dp"
         android:layout_centerVertical="true"
         android:layout_marginLeft="10dp"
         android:background="@drawable/camera_white"
@@ -24,10 +25,11 @@
 
     <Button
         android:id="@+id/button_timeline"
-        android:layout_width="35dp"
-        android:layout_height="24dp"
+        android:layout_width="34dp"
+        android:layout_height="22dp"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="355dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="5dp"
         android:background="@drawable/ic_list_black_48dp"
         android:textColor="#fff" />
 
