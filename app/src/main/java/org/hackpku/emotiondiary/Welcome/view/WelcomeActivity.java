@@ -102,7 +102,7 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
         //*/
     }
 
-    @Override
+    @Override /*aaa*/
     public void onEnterHomepage() {
         //*
         /*/
