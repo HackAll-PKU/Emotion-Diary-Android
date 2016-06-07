@@ -21,6 +21,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
+import android.widget.Toast;
 
 import org.hackpku.emotiondiary.Homepage.HomePageActivity;
 import org.hackpku.emotiondiary.MainApplication;
@@ -39,9 +40,11 @@ import java.util.Locale;
 public class RecordEmotionActivity extends AppCompatActivity {
 
 
-    private ArrayList<Bitmap> Pictures;
+    private ArrayList<Bitmap> Pictures = new ArrayList<Bitmap>();
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
+        Toast.makeText(this,"DEBUGGING",Toast.LENGTH_SHORT);
+
         switch(item.getItemId()){
             case R.id.action_ok:
                 saveData();
@@ -68,8 +71,9 @@ public class RecordEmotionActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         String mCurrentPath = intent.getStringExtra("photoPath");
+        mCurrentPhotoPath = mCurrentPath;
         SeekBar seekBar = (SeekBar) findViewById(R.id.seekBar);
-        seekBar.setProgress((int)smiling*seekBar.getMax());
+        seekBar.setProgress((int)smiling*seekBar.getMax()/100);
         ImageView imageView = (ImageView) findViewById(R.id.imageView);
         Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPath);
         imageView.setImageBitmap(bitmap);
