@@ -13,7 +13,6 @@ import org.hackpku.emotiondiary.R;
 public class TitleView extends FrameLayout {
     private Button btnCamera;
     private Button btnTimeline;
-    private Button btnUserCenter;
     private TextView titleText;
 
     public TitleView(Context context, AttributeSet attrs) {
@@ -22,7 +21,6 @@ public class TitleView extends FrameLayout {
         titleText = (TextView) findViewById(R.id.title_text);
         btnCamera = (Button) findViewById(R.id.button_camera);
         btnTimeline=(Button)findViewById(R.id.button_timeline);
-        btnUserCenter=(Button)findViewById(R.id.button_usercenter);
 
         btnCamera.setOnClickListener(new OnClickListener() {
             @Override
@@ -38,12 +36,6 @@ public class TitleView extends FrameLayout {
             }
         });
 
-        btnUserCenter.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //TODO 用户中心按钮点击事件，呼出用户中心界面
-            }
-        });
     }
 
 }

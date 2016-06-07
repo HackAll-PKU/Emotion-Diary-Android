@@ -26,7 +26,6 @@ public class DiaryOutlineView extends FrameLayout {
         riv_emotion = (RoundImageView) findViewById(R.id.emotion_view);
         tv_time = (TextView) findViewById(R.id.time_text);
         tv_diary = (TextView) findViewById(R.id.diary_text);
-        iv_heart = (ImageView) findViewById(R.id.heart_View);
         iv_heart.setTag(R.drawable.heart_grey);
 
         /**
