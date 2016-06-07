@@ -25,7 +25,7 @@
             android:nestedScrollingEnabled="false"
             android:textColor="@color/primary_material_dark"
             android:textStyle="normal"
-            android:background="@android:color/tab_indicator_text"
+            android:background="@color/accent_material_dark"
             android:backgroundTint="#eeeef0"
             android:clickable="true"
             android:contextClickable="true"
@@ -42,27 +42,19 @@
             android:nestedScrollingEnabled="false"
             android:textColor="@color/primary_material_dark"
             android:textStyle="normal"
-            android:background="@android:color/tab_indicator_text"
+            android:background="@color/switch_thumb_normal_material_light"
             android:backgroundTint="#eeeef0"
             android:clickable="true"
             android:contextClickable="true"
             android:enabled="true"
             android:singleLine="false"
-            android:visibility="visible"
-            android:layout_weight="0.18" />
+            android:visibility="visible" />
     </LinearLayout>
 
     <com.github.mikephil.charting.charts.LineChart
     android:id="@+id/chart"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content" />
+    android:layout_height="match_parent" />
 
-
-    <org.hackpku.emotiondiary.Stats.StatsView
-        android:layout_width="422dp"
-        android:layout_height="172dp"
-        android:id="@+id/view6"
-        android:layout_gravity="bottom"
-        android:layout_weight="0.18" />
 
 </LinearLayout>
